@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Platform } from 'react-native';
+import { View, Text, Platform, StyleSheet } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import colors from './utils/colors';
 import { TouchableOpacity } from 'react-native';
@@ -30,19 +30,17 @@ export const DatePicker = () => {
         setDate(new Date(currentDate));
     }
 
-    const backgroundColor = colors.purple;
-
     return (
-        <View style={{ backgroundColor: backgroundColor, alignItems: 'center' }}>
-            <View style={{ flexDirection: 'row' }}>
-                <TouchableOpacity onPress={() => addToDate(-1)} style={{ backgroundColor, paddingVertical: 10, paddingHorizontal: 24 }}>
-                    <Text style={{ color: 'white' }}>{'<'}</Text>
+        <View style={styles.container}>
+            <View style={styles.buttonsWrapper}>
+                <TouchableOpacity onPress={() => addToDate(-1)} style={styles.secondaryButton}>
+                    <Text style={styles.text}>{'<'}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={showDatepicker} style={{ backgroundColor, paddingVertical: 10, paddingHorizontal: 16 }}>
-                    <Text style={{ color: 'white' }}>{date.toLocaleDateString()}</Text>
+                <TouchableOpacity onPress={showDatepicker} style={styles.mainButton}>
+                    <Text style={styles.text}>{date.toLocaleDateString()}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => addToDate(1)} style={{ backgroundColor, paddingVertical: 10, paddingHorizontal: 24 }}>
-                    <Text style={{ color: 'white' }}>{'>'}</Text>
+                <TouchableOpacity onPress={() => addToDate(1)} style={styles.secondaryButton}>
+                    <Text style={styles.text}>{'>'}</Text>
                 </TouchableOpacity>
             </View>
             {show && (
@@ -58,3 +56,27 @@ export const DatePicker = () => {
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        backgroundColor: colors.primary3,
+        alignItems: 'center',
+    },
+    buttonsWrapper: {
+        flexDirection: 'row',
+    },
+    secondaryButton: {
+        backgroundColor: colors.primary3,
+        paddingVertical: 15,
+        paddingHorizontal: 24
+    },
+    mainButton: {
+        backgroundColor: colors.primary3,
+        paddingVertical: 15,
+        paddingHorizontal: 16
+    },
+    text: {
+        fontSize: 16,
+        color: 'white',
+    }
+});
