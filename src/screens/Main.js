@@ -18,6 +18,7 @@ export default class HomeScreen extends React.Component {
             ],
             sections: [
                 {
+                    key: Math.random().toString(),
                     title: "Leitura bíblica",
                     checkable: false,
                 },
@@ -29,15 +30,26 @@ export default class HomeScreen extends React.Component {
         };
     };
 
-    submitTodo = () => {
-        if (!this.state.textInput) {
-            return;
-        }
-        this.setState(({ todos, textInput }) => ({  // TODO acertar section
-            todos: [...todos, { key: Math.random().toString(), done: false, text: textInput, section: 'Leitura bíblica' }],
-            textInput: '',
-        }))
-    }
+    submitTodo = (key, textInput) => {
+        let todos = [...this.state.todos];
+        let currentItemIndex = this.state.todos.findIndex(todo => todo.key === key);
+        todos[currentItemIndex] = {
+            ...todos[currentItemIndex],
+            isEditing: false,
+            text: textInput,
+        };
+        this.setState({ todos: todos });
+    };
+
+    requestEdit = (key) => {
+        let todos = [...this.state.todos];
+        let currentItemIndex = this.state.todos.findIndex(todo => todo.key === key);
+        todos[currentItemIndex] = {
+            ...todos[currentItemIndex],
+            isEditing: true,
+        };
+        this.setState({ todos: todos });
+    };
 
     toggleCheck = (key) => {
         this.setState(({ todos }) => ({
@@ -66,10 +78,16 @@ export default class HomeScreen extends React.Component {
         return sectionsList;
     }
 
+    addItemToSection = (sectionKey) => {
+        let section = this.state.sections.find(section => section.key === sectionKey);
+        this.setState(({ todos }) => ({
+            todos: [...todos, { key: Math.random().toString(), done: false, text: '', section: section.title, isEditing: true }],
+        }));
+    }
+
     render() {
         return (
             <KeyboardAvoidingView
-                behavior="padding"
                 style={styles.container}
             >
                 <DatePicker></DatePicker>
@@ -82,14 +100,17 @@ export default class HomeScreen extends React.Component {
                             text={item.text}
                             done={item.done}
                             showCheckbox={section.checkable}
+                            onSubmitTodo={(textInput) => this.submitTodo(item.key, textInput)}
                             onToggleCheck={() => this.toggleCheck(item.key, section)}
                             onDeleteTask={() => this.deleteTask(item.key, section)}
+                            isEditing={item.isEditing}
+                            requestEdit={() => this.requestEdit(item.key)}
                         />
                     )}
-                    renderSectionHeader={({ section: { title } }) => (
+                    renderSectionHeader={({ section: { key, title } }) => (
                         <View style={styles.sectionHeader}>
                             <Text style={styles.sectionHeaderTitle}>{title}</Text>
-                            <TouchableOpacity style={styles.sectionHeaderButton} onPress={this.openSectionModal}>
+                            <TouchableOpacity style={styles.sectionHeaderButton} onPress={() => { this.addItemToSection(key) }}>
                                 <Text style={{ color: 'white', fontSize: 24, marginBottom: 3 }}>+</Text>
                             </TouchableOpacity>
                         </View>
@@ -98,28 +119,6 @@ export default class HomeScreen extends React.Component {
                         <View style={styles.sectionFooter}></View>
                     )}
                 />
-                <View style={styles.textBox}>
-                    <View style={styles.wrapper}>
-                        <TextInput
-                            placeholder="O que você quer fazer?"
-                            onChangeText={textInput => this.setState({ textInput })}
-                            onSubmitEditing={this.submitTodo}
-                            value={this.state.textInput}
-                            style={styles.textInput}
-                        />
-                    </View>
-                    <View>
-                        <TouchableOpacity
-                            style={styles.iconWrapper}
-                            onPress={this.submitTodo}
-                        >
-                            <Icon
-                                name="add"
-                                iconStyle={styles.icon}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                </View>
             </KeyboardAvoidingView>
         );
     }
@@ -131,32 +130,6 @@ const styles = StyleSheet.create({
     },
     sectionList: {
         marginTop: 8,
-    },
-    textBox: {
-        flexDirection: 'row',
-        position: 'absolute', //Here is the trick
-        bottom: 0, //Here is the trick
-        marginHorizontal: 16,
-        marginVertical: 8,
-        borderWidth: 1,
-        borderColor: colors.primary2,
-        backgroundColor: 'white',
-        borderRadius: 4,
-    },
-    textInput: {
-        flexGrow: 1,
-        marginHorizontal: 16,
-    },
-    icon: {
-        color: 'white',
-    },
-    iconWrapper: {
-        padding: 10,
-        backgroundColor: '#3caea3',
-        borderRadius: 4,
-    },
-    wrapper: {
-        flex: 1,
     },
     sectionHeader: {
         paddingHorizontal: 15,

@@ -1,30 +1,67 @@
-import React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import React, { useState } from "react";
+import { Text, View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import { Icon } from 'react-native-elements';
 import colors from './utils/colors';
 
-export default ({ text, done, onToggleCheck, onDeleteTask, showCheckbox }) => (
-    <View style={styles.container}>
-        {showCheckbox && <View style={styles.checkBoxWrapper}>
-            <CheckBox
-                value={done}
-                onValueChange={onToggleCheck}
-                style={styles.checkBox}
-            />
-        </View>}
-        <View style={styles.wrapper}>
-            <Text style={styles.text}>{text}</Text>
+export default ({ text, done, onToggleCheck, onDeleteTask, showCheckbox, isEditing, onSubmitTodo, requestEdit }) => {
+    const [textInput, setTextInput] = useState(text);
+
+    return (
+        <View style={styles.container}>
+            {showCheckbox && <View style={styles.checkBoxWrapper}>
+                <CheckBox
+                    value={done}
+                    onValueChange={onToggleCheck}
+                    style={styles.checkBox}
+                />
+            </View>}
+            <View style={styles.wrapper}>
+                {isEditing &&
+                    <View style={styles.textBox}>
+                        <View style={styles.textBoxWrapper}>
+                            <TextInput
+                                placeholder="O que você quer fazer?"
+                                onChangeText={textInput => setTextInput(textInput)}
+                                onSubmitEditing={() => onSubmitTodo(textInput)}
+                                value={textInput}
+                                style={styles.textBoxInput}
+                            />
+                        </View>
+                        <View>
+                            <TouchableOpacity
+                                style={styles.textBoxIconWrapper}
+                                onPress={() => onSubmitTodo(textInput)}
+                            >
+                                <Icon
+                                    name="done"
+                                    iconStyle={styles.textBoxIcon}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                }
+                {!isEditing && 
+                    <Text
+                        style={styles.text}
+                        onPress={() => {
+                            requestEdit();
+                        }
+                    }>
+                            {text}
+                    </Text>
+                }
+            </View>
+            <View style={styles.iconWrapper}>
+                <Icon
+                    name="clear"
+                    onPress={onDeleteTask}
+                    iconStyle={styles.icon}
+                />
+            </View>
         </View>
-        <View style={styles.iconWrapper}>
-            <Icon
-                name="clear"
-                onPress={onDeleteTask}
-                iconStyle={styles.icon}
-            />
-        </View>
-    </View>
-);
+    )
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -55,5 +92,27 @@ const styles = StyleSheet.create({
     wrapper: {
         flex: 1,
         justifyContent: 'center',
+    },
+    textBox: {
+        flexDirection: 'row',
+        borderWidth: 1,
+        borderColor: colors.primary2,
+        backgroundColor: 'white',
+        borderRadius: 4,
+    },
+    textBoxInput: {
+        flexGrow: 1,
+        marginHorizontal: 16,
+    },
+    textBoxIcon: {
+        color: 'white',
+    },
+    textBoxIconWrapper: {
+        padding: 10,
+        backgroundColor: '#3caea3',
+        borderRadius: 4,
+    },
+    textBoxWrapper: {
+        flex: 1,
     },
 });
