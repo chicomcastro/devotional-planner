@@ -1,21 +1,13 @@
 import React, { useState } from "react";
 import { Text, View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
-import CheckBox from '@react-native-community/checkbox';
 import { Icon } from 'react-native-elements';
 import colors from './utils/colors';
 
-export default ({ text, done, onToggleCheck, onDeleteTask, showCheckbox, isEditing, onSubmitTodo, requestEdit }) => {
-    const [textInput, setTextInput] = useState(text);
+export default ({ title, isEditing, onSubmitHeader, requestEdit, onPress }) => {
+    const [textInput, setTextInput] = useState(title);
 
     return (
-        <View style={styles.container}>
-            {showCheckbox && <View style={styles.checkBoxWrapper}>
-                <CheckBox
-                    value={done}
-                    onValueChange={onToggleCheck}
-                    style={styles.checkBox}
-                />
-            </View>}
+        <View style={styles.sectionHeader}>
             <View style={styles.wrapper}>
                 {isEditing &&
                     <View style={styles.textBox}>
@@ -23,7 +15,7 @@ export default ({ text, done, onToggleCheck, onDeleteTask, showCheckbox, isEditi
                             <TextInput
                                 placeholder="O que você quer fazer?"
                                 onChangeText={textInput => setTextInput(textInput)}
-                                onSubmitEditing={() => onSubmitTodo(textInput)}
+                                onSubmitEditing={() => onSubmitHeader(textInput)}
                                 value={textInput}
                                 style={styles.textBoxInput}
                                 autoFocus={true}
@@ -32,7 +24,7 @@ export default ({ text, done, onToggleCheck, onDeleteTask, showCheckbox, isEditi
                         <View>
                             <TouchableOpacity
                                 style={styles.textBoxIconWrapper}
-                                onPress={() => onSubmitTodo(textInput)}
+                                onPress={() => onSubmitHeader(textInput)}
                             >
                                 <Icon
                                     name="done"
@@ -44,55 +36,52 @@ export default ({ text, done, onToggleCheck, onDeleteTask, showCheckbox, isEditi
                 }
                 {!isEditing && 
                     <Text
-                        style={styles.text}
-                        onPress={() => {
-                            requestEdit();
-                        }
-                    }>
-                            {text}
+                        style={styles.sectionHeaderTitle}
+                        onPress={requestEdit}
+                    >
+                            {title}
                     </Text>
                 }
             </View>
-            <View style={styles.iconWrapper}>
-                <Icon
-                    name="clear"
-                    onPress={onDeleteTask}
-                    iconStyle={styles.icon}
-                />
-            </View>
+            <TouchableOpacity
+                style={styles.sectionHeaderButton}
+                onPress={onPress}
+            >
+                <Text
+                    style={{ color: 'white', fontSize: 24, marginBottom: 3 }}
+                >
+                    +
+                </Text>
+            </TouchableOpacity>
         </View>
     )
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        flexDirection: 'row',
-        backgroundColor: colors.primary1,
-        borderRadius: 5,
-        marginTop: 10,
-        marginHorizontal: 10,
-        padding: 8,
-    },
-    checkBoxWrapper: {
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    checkBox: {
-        alignSelf: "center",
-    },
-    text: {
-        padding: 8,
-    },
-    icon: {
-    },
-    iconWrapper: {
-        padding: 8,
-        justifyContent: 'center',
-    },
     wrapper: {
         flex: 1,
         justifyContent: 'center',
+    },
+    sectionHeader: {
+        backgroundColor: colors.primary2,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    sectionHeaderTitle: {
+        marginVertical: 15,
+        paddingHorizontal: 15,
+        fontSize: 18,
+    },
+    sectionHeaderButton: {
+        backgroundColor: colors.essence1,
+        marginRight: 15,
+        color: 'white',
+        height: 40,
+        width: 40,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 20,
     },
     textBox: {
         flexDirection: 'row',
@@ -100,16 +89,19 @@ const styles = StyleSheet.create({
         borderColor: colors.primary2,
         backgroundColor: 'white',
         borderRadius: 4,
+        marginVertical: 5,
+        marginHorizontal: 7,
     },
     textBoxInput: {
         flexGrow: 1,
         marginHorizontal: 7,
+        fontSize: 18
     },
     textBoxIcon: {
         color: 'white',
     },
     textBoxIconWrapper: {
-        padding: 7,
+        padding: 10,
         backgroundColor: '#3caea3',
         borderRadius: 4,
     },

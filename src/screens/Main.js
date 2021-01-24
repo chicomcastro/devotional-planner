@@ -1,9 +1,10 @@
 import React from 'react';
-import { StyleSheet, TextInput, View, FlatList, KeyboardAvoidingView, TouchableOpacity, SectionList, Text } from 'react-native';
+import { Keyboard, StyleSheet, TextInput, View, FlatList, KeyboardAvoidingView, TouchableOpacity, SectionList, Text } from 'react-native';
 import { Icon } from 'react-native-elements';
 import Todo from '../Todo.js';
 import { DatePicker } from '../DatePicker.js';
 import colors from '../utils/colors.js';
+import SectionHeader from '../SectionHeader.js';
 
 export default class HomeScreen extends React.Component {
     constructor(props) {
@@ -24,11 +25,24 @@ export default class HomeScreen extends React.Component {
                 },
             ],
             textInput: '',
-            date: new Date(1598051730000),
-            mode: 'date',
-            show: false,
+            showingKeyboard: false,
         };
+        this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
+        this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
     };
+
+    componentWillUnmount() {
+        this.keyboardDidShowListener.remove();
+        this.keyboardDidHideListener.remove();
+    }
+
+    _keyboardDidShow = () => {
+        this.setState({ showingKeyboard: true });
+    }
+
+    _keyboardDidHide = () => {
+        this.setState({ showingKeyboard: false });
+    }
 
     submitTodo = (key, textInput) => {
         let todos = [...this.state.todos];
@@ -41,7 +55,7 @@ export default class HomeScreen extends React.Component {
         this.setState({ todos: todos });
     };
 
-    requestEdit = (key) => {
+    requestEditTodo = (key) => {
         let todos = [...this.state.todos];
         let currentItemIndex = this.state.todos.findIndex(todo => todo.key === key);
         todos[currentItemIndex] = {
@@ -49,6 +63,34 @@ export default class HomeScreen extends React.Component {
             isEditing: true,
         };
         this.setState({ todos: todos });
+    };
+
+    submitHeader = (key, textInput) => {
+        let sections = [...this.state.sections];
+        let currentSectionIndex = this.state.sections.findIndex(section => section.key === key);
+        let originalTitle = sections[currentSectionIndex].title;
+        sections[currentSectionIndex] = {
+            ...sections[currentSectionIndex],
+            isEditing: false,
+            title: textInput,
+        };
+        let todos = [...this.state.todos];
+        todos.forEach(todo => {
+            if (todo.section === originalTitle) {
+                todo.section = textInput;
+            }
+        })
+        this.setState({ sections: sections, todos: todos });
+    };
+
+    requestEditSection = (key) => {
+        let sections = [...this.state.sections];
+        let currentSectionIndex = this.state.sections.findIndex(section => section.key === key);
+        sections[currentSectionIndex] = {
+            ...sections[currentSectionIndex],
+            isEditing: true,
+        };
+        this.setState({ sections: sections });
     };
 
     toggleCheck = (key) => {
@@ -74,7 +116,11 @@ export default class HomeScreen extends React.Component {
         let sectionsList = sectionsProps.map(section => { return { ...section, data: [] } });
         let sectionsMap = {};
         sectionsList.forEach(section => sectionsMap[section.title] = section);
-        todos.forEach(todo => sectionsMap[todo.section].data.push(todo));
+        todos.forEach(todo => {
+            if(sectionsMap[todo.section]){
+                sectionsMap[todo.section].data.push(todo);
+            }}
+        );
         return sectionsList;
     }
 
@@ -104,21 +150,41 @@ export default class HomeScreen extends React.Component {
                             onToggleCheck={() => this.toggleCheck(item.key, section)}
                             onDeleteTask={() => this.deleteTask(item.key, section)}
                             isEditing={item.isEditing}
-                            requestEdit={() => this.requestEdit(item.key)}
+                            requestEdit={() => this.requestEditTodo(item.key)}
                         />
                     )}
-                    renderSectionHeader={({ section: { key, title } }) => (
-                        <View style={styles.sectionHeader}>
-                            <Text style={styles.sectionHeaderTitle}>{title}</Text>
-                            <TouchableOpacity style={styles.sectionHeaderButton} onPress={() => { this.addItemToSection(key) }}>
-                                <Text style={{ color: 'white', fontSize: 24, marginBottom: 3 }}>+</Text>
-                            </TouchableOpacity>
-                        </View>
+                    renderSectionHeader={({ section: { key, title, isEditing } }) => (
+                        <SectionHeader
+                            title={title}
+                            isEditing={isEditing}
+                            onSubmitHeader={(textInput) => this.submitHeader(key, textInput)}
+                            requestEdit={() => this.requestEditSection(key)}
+                            onPress={() => this.addItemToSection(key)}
+                        ></SectionHeader>
                     )}
                     renderSectionFooter={() => (
                         <View style={styles.sectionFooter}></View>
                     )}
                 />
+                {!this.state.showingKeyboard &&
+                    <TouchableOpacity
+                        style={{
+                            borderWidth: 1,
+                            borderColor: 'rgba(0,0,0,0.2)',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            width: 70,
+                            position: 'absolute',
+                            bottom: 20,
+                            right: 20,
+                            height: 70,
+                            backgroundColor: '#fff',
+                            borderRadius: 100,
+                        }}
+                    >
+                        <Icon name="android" size={30} color="#01a699" />
+                    </TouchableOpacity>
+                }
             </KeyboardAvoidingView>
         );
     }
@@ -130,26 +196,6 @@ const styles = StyleSheet.create({
     },
     sectionList: {
         marginTop: 8,
-    },
-    sectionHeader: {
-        paddingHorizontal: 15,
-        backgroundColor: colors.primary2,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
-    sectionHeaderTitle: {
-        marginVertical: 15,
-        fontSize: 18,
-    },
-    sectionHeaderButton: {
-        backgroundColor: colors.essence1,
-        color: 'white',
-        height: 40,
-        width: 40,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 20,
     },
     sectionFooter: {
         marginBottom: 20,
