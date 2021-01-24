@@ -1,21 +1,9 @@
 import React from 'react';
-import {
-    StyleSheet,
-    TextInput,
-    View,
-    FlatList,
-    KeyboardAvoidingView,
-    TouchableOpacity,
-    SectionList,
-    Text,
-    Modal,
-    TouchableHighlight
-} from 'react-native';
+import { StyleSheet, TextInput, View, FlatList, KeyboardAvoidingView, TouchableOpacity, SectionList, Text } from 'react-native';
 import { Icon } from 'react-native-elements';
 import Todo from '../Todo.js';
 import { DatePicker } from '../DatePicker.js';
 import colors from '../utils/colors.js';
-import { Button } from 'react-native';
 
 export default class HomeScreen extends React.Component {
     constructor(props) {
@@ -38,7 +26,6 @@ export default class HomeScreen extends React.Component {
             date: new Date(1598051730000),
             mode: 'date',
             show: false,
-            modalVisible: false,
         };
     };
 
@@ -79,14 +66,6 @@ export default class HomeScreen extends React.Component {
         return sectionsList;
     }
 
-    openSectionModal = () => {
-        this.setModalVisible(true);
-    }
-
-    setModalVisible = (modalVisible) => {
-        this.setState({ modalVisible });
-    }
-
     render() {
         return (
             <KeyboardAvoidingView
@@ -109,56 +88,35 @@ export default class HomeScreen extends React.Component {
                     )}
                     renderSectionHeader={({ section: { title } }) => (
                         <View style={styles.sectionHeader}>
-                            <Text style={styles.sectionHeaderTitle}>{title}</Text>
-                            <TouchableOpacity style={styles.sectionHeaderButton} onPress={this.openSectionModal}>
-                                <Text style={{ color: 'white', fontSize: 24, marginBottom: 3 }}>+</Text>
-                            </TouchableOpacity>
+                            <Text style={styles.title}>{title}</Text>
                         </View>
                     )}
                     renderSectionFooter={() => (
                         <View style={styles.sectionFooter}></View>
                     )}
                 />
-                <Modal
-                    animationType="slide"
-                    transparent={true}
-                    visible={this.state.modalVisible}
-                    onRequestClose={() => {
-                        Alert.alert("Modal has been closed.");
-                    }}
-                >
-                    <View style={styles.centeredView}>
-                        <View style={styles.modalView}>
-                            <Text style={styles.modalText}>Criar novo item</Text>
-
-                            <View style={styles.textBox}>
-                                <View style={styles.wrapper}>
-                                    <TextInput
-                                        placeholder="O que você quer fazer?"
-                                        onChangeText={textInput => this.setState({ textInput })}
-                                        onSubmitEditing={this.submitTodo}
-                                        value={this.state.textInput}
-                                        style={styles.textInput}
-                                    />
-                                </View>
-                                <View>
-                                    <TouchableOpacity
-                                        style={styles.iconWrapper}
-                                        onPress={() => {
-                                            this.submitTodo();
-                                            this.setModalVisible(false);
-                                        }}
-                                    >
-                                        <Icon
-                                            name="add"
-                                            iconStyle={styles.icon}
-                                        />
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        </View>
+                <View style={styles.textBox}>
+                    <View style={styles.wrapper}>
+                        <TextInput
+                            placeholder="O que você quer fazer?"
+                            onChangeText={textInput => this.setState({ textInput })}
+                            onSubmitEditing={this.submitTodo}
+                            value={this.state.textInput}
+                            style={styles.textInput}
+                        />
                     </View>
-                </Modal>
+                    <View>
+                        <TouchableOpacity
+                            style={styles.iconWrapper}
+                            onPress={this.submitTodo}
+                        >
+                            <Icon
+                                name="add"
+                                iconStyle={styles.icon}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                </View>
             </KeyboardAvoidingView>
         );
     }
@@ -173,8 +131,8 @@ const styles = StyleSheet.create({
     },
     textBox: {
         flexDirection: 'row',
-        // position: 'absolute', //Here is the trick
-        // bottom: 0, //Here is the trick
+        position: 'absolute', //Here is the trick
+        bottom: 0, //Here is the trick
         marginHorizontal: 16,
         marginVertical: 8,
         borderWidth: 1,
@@ -197,57 +155,15 @@ const styles = StyleSheet.create({
     wrapper: {
         flex: 1,
     },
-    sectionHeaderTitle: {
-        marginVertical: 15,
+    title: {
         fontSize: 18,
     },
     sectionHeader: {
         paddingHorizontal: 15,
+        paddingVertical: 15,
         backgroundColor: colors.primary2,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
     },
     sectionFooter: {
         marginBottom: 20,
-    },
-    sectionHeaderButton: {
-        backgroundColor: colors.essence1,
-        color: 'white',
-        height: 40,
-        width: 40,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 20,
-    },
-    modalView: {
-        margin: 20,
-        backgroundColor: "white",
-        borderRadius: 20,
-        padding: 35,
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5
-    },
-    openButton: {
-        backgroundColor: "#F194FF",
-        borderRadius: 20,
-        padding: 10,
-        elevation: 2
-    },
-    textStyle: {
-        color: "white",
-        fontWeight: "bold",
-        textAlign: "center"
-    },
-    modalText: {
-        marginBottom: 15,
-        textAlign: "center"
     },
 });
