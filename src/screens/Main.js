@@ -88,7 +88,10 @@ export default class HomeScreen extends React.Component {
                     )}
                     renderSectionHeader={({ section: { title } }) => (
                         <View style={styles.sectionHeader}>
-                            <Text style={styles.title}>{title}</Text>
+                            <Text style={styles.sectionHeaderTitle}>{title}</Text>
+                            <TouchableOpacity style={styles.sectionHeaderButton} onPress={this.openSectionModal}>
+                                <Text style={{ color: 'white', fontSize: 24, marginBottom: 3 }}>+</Text>
+                            </TouchableOpacity>
                         </View>
                     )}
                     renderSectionFooter={() => (
@@ -155,13 +158,28 @@ const styles = StyleSheet.create({
     wrapper: {
         flex: 1,
     },
-    title: {
-        fontSize: 18,
-    },
     sectionHeader: {
         paddingHorizontal: 15,
-        paddingVertical: 15,
         backgroundColor: colors.primary2,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    sectionHeaderTitle: {
+        marginVertical: 15,
+        fontSize: 18,
+    },
+    sectionHeaderButton: {
+        backgroundColor: colors.essence1,
+        color: 'white',
+        height: 40,
+        width: 40,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 20,
+    },
+    sectionFooter: {
+        marginBottom: 20,
     },
     sectionFooter: {
         marginBottom: 20,
