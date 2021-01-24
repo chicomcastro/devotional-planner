@@ -74,6 +74,7 @@ export default class HomeScreen extends React.Component {
             >
                 <DatePicker></DatePicker>
                 <SectionList
+                    style={styles.sectionList}
                     sections={this.getSections()}
                     keyExtractor={(item, index) => item.key + index}
                     renderItem={({ item, index, section }) => (
@@ -124,6 +125,9 @@ export default class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    sectionList: {
+        marginTop: 8,
     },
     textBox: {
         flexDirection: 'row',
