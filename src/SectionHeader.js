@@ -19,6 +19,7 @@ export default ({ title, isEditing, onSubmitHeader, requestEdit, onPress }) => {
                                 value={textInput}
                                 style={styles.textBoxInput}
                                 autoFocus={true}
+                                multiline={true}
                             />
                         </View>
                         <View>
@@ -91,6 +92,7 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         marginVertical: 5,
         marginHorizontal: 7,
+        alignItems: 'center',
     },
     textBoxInput: {
         flexGrow: 1,

@@ -27,6 +27,7 @@ export default ({ text, done, onToggleCheck, onDeleteTask, showCheckbox, isEditi
                                 value={textInput}
                                 style={styles.textBoxInput}
                                 autoFocus={true}
+                                multiline={true}
                             />
                         </View>
                         <View>
@@ -100,6 +101,7 @@ const styles = StyleSheet.create({
         borderColor: colors.primary2,
         backgroundColor: 'white',
         borderRadius: 4,
+        alignItems: 'center',
     },
     textBoxInput: {
         flexGrow: 1,
