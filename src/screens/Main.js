@@ -5,6 +5,7 @@ import Todo from '../Todo.js';
 import { DatePicker } from '../DatePicker.js';
 import colors from '../utils/colors.js';
 import SectionHeader from '../SectionHeader.js';
+import FloatingButton from '../FloatingButton.js';
 
 export default class HomeScreen extends React.Component {
     constructor(props) {
@@ -117,17 +118,38 @@ export default class HomeScreen extends React.Component {
         let sectionsMap = {};
         sectionsList.forEach(section => sectionsMap[section.title] = section);
         todos.forEach(todo => {
-            if(sectionsMap[todo.section]){
+            if (sectionsMap[todo.section]) {
                 sectionsMap[todo.section].data.push(todo);
-            }}
+            }
+        }
         );
         return sectionsList;
     }
 
     addItemToSection = (sectionKey) => {
-        let section = this.state.sections.find(section => section.key === sectionKey);
+        let section = [...this.state.sections].find(section => section.key === sectionKey);
         this.setState(({ todos }) => ({
             todos: [...todos, { key: Math.random().toString(), done: false, text: '', section: section.title, isEditing: true }],
+        }));
+    }
+
+    deleteSection = (sectionKey) => {
+        let sections = [...this.state.sections];
+        let currentSection = sections.find(section => section.key === sectionKey);
+        let filteredTodos = [...this.state.todos].filter(todo => todo.section !== currentSection.title);
+        let filteredSections = sections.filter(section => section.key !== sectionKey);
+        this.setState({ sections: filteredSections, todos: filteredTodos });
+    }
+
+    addSection = () => {
+        let newSection = {
+            key: Math.random().toString(),
+            title: "",
+            checkable: false,
+            isEditing: true,
+        };
+        this.setState(({ sections }) => ({
+            sections: [...sections, newSection]
         }));
     }
 
@@ -159,32 +181,15 @@ export default class HomeScreen extends React.Component {
                             isEditing={isEditing}
                             onSubmitHeader={(textInput) => this.submitHeader(key, textInput)}
                             requestEdit={() => this.requestEditSection(key)}
-                            onPress={() => this.addItemToSection(key)}
+                            onPressAdd={() => this.addItemToSection(key)}
+                            onPressRemove={() => this.deleteSection(key)}
                         ></SectionHeader>
                     )}
                     renderSectionFooter={() => (
                         <View style={styles.sectionFooter}></View>
                     )}
                 />
-                {!this.state.showingKeyboard &&
-                    <TouchableOpacity
-                        style={{
-                            borderWidth: 1,
-                            borderColor: 'rgba(0,0,0,0.2)',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            width: 70,
-                            position: 'absolute',
-                            bottom: 20,
-                            right: 20,
-                            height: 70,
-                            backgroundColor: '#fff',
-                            borderRadius: 100,
-                        }}
-                    >
-                        <Icon name="android" size={30} color="#01a699" />
-                    </TouchableOpacity>
-                }
+                {!this.state.showingKeyboard && <FloatingButton onPress={this.addSection}></FloatingButton>}
             </KeyboardAvoidingView>
         );
     }

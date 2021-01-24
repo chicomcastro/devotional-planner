@@ -54,13 +54,15 @@ export default ({ text, done, onToggleCheck, onDeleteTask, showCheckbox, isEditi
                     </Text>
                 }
             </View>
-            <View style={styles.iconWrapper}>
-                <Icon
-                    name="clear"
-                    onPress={onDeleteTask}
-                    iconStyle={styles.icon}
-                />
-            </View>
+            {!isEditing && 
+                <View style={styles.iconWrapper}>
+                    <Icon
+                        name="clear"
+                        onPress={onDeleteTask}
+                        iconStyle={styles.icon}
+                    />
+                </View>
+            }
         </View>
     )
 };

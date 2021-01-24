@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, TextInput, TouchableOpacity } from 'react-nativ
 import { Icon } from 'react-native-elements';
 import colors from './utils/colors';
 
-export default ({ title, isEditing, onSubmitHeader, requestEdit, onPress }) => {
+export default ({ title, isEditing, onSubmitHeader, requestEdit, onPressAdd, onPressRemove }) => {
     const [textInput, setTextInput] = useState(title);
 
     return (
@@ -44,16 +44,26 @@ export default ({ title, isEditing, onSubmitHeader, requestEdit, onPress }) => {
                     </Text>
                 }
             </View>
-            <TouchableOpacity
-                style={styles.sectionHeaderButton}
-                onPress={onPress}
-            >
-                <Text
-                    style={{ color: 'white', fontSize: 24, marginBottom: 3 }}
+            {!isEditing && <View style={{flexDirection: 'row', marginRight: 5}}>
+                <TouchableOpacity
+                    style={styles.sectionHeaderButton}
+                    onPress={onPressRemove}
                 >
-                    +
-                </Text>
-            </TouchableOpacity>
+                    <Icon
+                        name="delete"
+                        iconStyle={styles.textBoxIcon}
+                    />
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.sectionHeaderButton}
+                    onPress={onPressAdd}
+                >
+                    <Icon
+                        name="add"
+                        iconStyle={styles.textBoxIcon}
+                    />
+                </TouchableOpacity>
+            </View>}
         </View>
     )
 };
@@ -76,7 +86,7 @@ const styles = StyleSheet.create({
     },
     sectionHeaderButton: {
         backgroundColor: colors.essence1,
-        marginRight: 15,
+        marginRight: 10,
         color: 'white',
         height: 40,
         width: 40,
