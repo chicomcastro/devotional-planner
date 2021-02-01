@@ -25,19 +25,19 @@ const routeNames = {
 const TabNavigator = () => 
     <Tab.Navigator
         screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
+            tabBarIcon: ({ focused, color, size }) => {
+                let iconName;
 
-            let iconMap = {
-                'Visão diária': 'today',
-                'Visão geral': 'calendar-view-day',
-                'Configurações': 'settings',
-            };
-            iconName = iconMap[route.name];
+                let iconMap = {
+                    'Visão diária': 'today',
+                    'Visão geral': 'calendar-view-day',
+                    'Configurações': 'settings',
+                };
+                iconName = iconMap[route.name];
 
-            // You can return any component that you like here!
-            return <Icon name={iconName} size={size} color={color} />;
-        },
+                // You can return any component that you like here!
+                return <Icon name={iconName} size={size} color={color} />;
+            },
         })}
         tabBarOptions={{
             activeTintColor: colors.essence2,
