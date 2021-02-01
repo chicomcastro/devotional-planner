@@ -6,4 +6,5 @@ export default {
     primary2: '#BDCCD9',
     primary3: '#90ADC6',
     purple: '#3caea3',
+    white: 'white',
 }

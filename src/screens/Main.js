@@ -6,6 +6,8 @@ import { DatePicker } from '../DatePicker.js';
 import colors from '../utils/colors.js';
 import SectionHeader from '../SectionHeader.js';
 import FloatingButton from '../FloatingButton.js';
+import { StatusBar } from 'react-native';
+import { SafeAreaView } from 'react-native';
 
 export default class HomeScreen extends React.Component {
     constructor(props) {
@@ -155,9 +157,10 @@ export default class HomeScreen extends React.Component {
 
     render() {
         return (
-            <KeyboardAvoidingView
+            <SafeAreaView
                 style={styles.container}
             >
+                <StatusBar backgroundColor={colors.white} barStyle='dark-content'></StatusBar>
                 <DatePicker></DatePicker>
                 <SectionList
                     style={styles.sectionList}
@@ -190,7 +193,7 @@ export default class HomeScreen extends React.Component {
                     )}
                 />
                 {!this.state.showingKeyboard && <FloatingButton onPress={this.addSection}></FloatingButton>}
-            </KeyboardAvoidingView>
+            </SafeAreaView>
         );
     }
 }
