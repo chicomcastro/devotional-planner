@@ -14,11 +14,11 @@ export default class HomeScreen extends React.Component {
         super(props);
         this.state = {
             todos: [
-                { key: Math.random().toString(), done: false, text: 'Leitura bíblica', section: 'Leitura bíblica' },
-                { key: Math.random().toString(), done: false, text: 'Gratidão', section: 'Leitura bíblica' },
-                { key: Math.random().toString(), done: false, text: 'Oração', section: 'Leitura bíblica' },
-                { key: Math.random().toString(), done: false, text: 'Decisão', section: 'Leitura bíblica' },
-                { key: Math.random().toString(), done: false, text: 'Jejum', section: 'Leitura bíblica' },
+                { key: Math.random().toString(), done: false, title: 'Leitura bíblica', section: 'Leitura bíblica' },
+                { key: Math.random().toString(), done: false, title: 'Gratidão', section: 'Leitura bíblica' },
+                { key: Math.random().toString(), done: false, title: 'Oração', section: 'Leitura bíblica' },
+                { key: Math.random().toString(), done: false, title: 'Decisão', section: 'Leitura bíblica' },
+                { key: Math.random().toString(), done: false, title: 'Jejum', section: 'Leitura bíblica' },
             ],
             sections: [
                 {
@@ -53,7 +53,7 @@ export default class HomeScreen extends React.Component {
         todos[currentItemIndex] = {
             ...todos[currentItemIndex],
             isEditing: false,
-            text: textInput,
+            title: textInput,
         };
         this.setState({ todos: todos });
     };
@@ -131,7 +131,7 @@ export default class HomeScreen extends React.Component {
     addItemToSection = (sectionKey) => {
         let section = [...this.state.sections].find(section => section.key === sectionKey);
         this.setState(({ todos }) => ({
-            todos: [...todos, { key: Math.random().toString(), done: false, text: '', section: section.title, isEditing: true }],
+            todos: [...todos, { key: Math.random().toString(), done: false, title: '', section: section.title, isEditing: true }],
         }));
     }
 
@@ -168,7 +168,7 @@ export default class HomeScreen extends React.Component {
                     keyExtractor={(item, index) => item.key + index}
                     renderItem={({ item, index, section }) => (
                         <Todo
-                            text={item.text}
+                            text={item.title}
                             done={item.done}
                             showCheckbox={section.checkable}
                             onSubmitTodo={(textInput) => this.submitTodo(item.key, textInput)}

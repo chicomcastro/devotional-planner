@@ -23,7 +23,7 @@ export default ({ text, done, onToggleCheck, onDeleteTask, showCheckbox, isEditi
                             <TextInput
                                 placeholder="O que você quer fazer?"
                                 onChangeText={textInput => setTextInput(textInput)}
-                                onSubmitEditing={() => onSubmitTodo(textInput)}
+                                onSubmitEditing={() => onSubmitTodo && onSubmitTodo(textInput)}
                                 value={textInput}
                                 style={styles.textBoxInput}
                                 autoFocus={true}
@@ -33,7 +33,7 @@ export default ({ text, done, onToggleCheck, onDeleteTask, showCheckbox, isEditi
                         <View>
                             <TouchableOpacity
                                 style={styles.textBoxIconWrapper}
-                                onPress={() => onSubmitTodo(textInput)}
+                                onPress={() => onSubmitTodo && onSubmitTodo(textInput)}
                             >
                                 <Icon
                                     name="done"
@@ -47,14 +47,14 @@ export default ({ text, done, onToggleCheck, onDeleteTask, showCheckbox, isEditi
                     <Text
                         style={styles.text}
                         onPress={() => {
-                            requestEdit();
+                            requestEdit && requestEdit();
                         }
                     }>
-                            {text}
+                        {text}
                     </Text>
                 }
             </View>
-            {!isEditing && 
+            {!!onDeleteTask && !isEditing && 
                 <View style={styles.iconWrapper}>
                     <Icon
                         name="clear"
