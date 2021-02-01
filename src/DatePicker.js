@@ -37,7 +37,7 @@ export const DatePicker = () => {
                     <Text style={styles.text}>{'<'}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={showDatepicker} style={styles.mainButton}>
-                    <Text style={styles.text}>{date.toLocaleDateString()}</Text>
+                    <Text style={styles.text}>{(date).toString().slice(0,10)}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => addToDate(1)} style={styles.secondaryButton}>
                     <Text style={styles.text}>{'>'}</Text>

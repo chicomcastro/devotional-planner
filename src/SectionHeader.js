@@ -15,7 +15,7 @@ export default ({ title, isEditing, onSubmitHeader, requestEdit, onPressAdd, onP
                             <TextInput
                                 placeholder="O que você quer fazer?"
                                 onChangeText={textInput => setTextInput(textInput)}
-                                onSubmitEditing={() => onSubmitHeader(textInput)}
+                                onSubmitEditing={() => onSubmitHeader && onSubmitHeader(textInput)}
                                 value={textInput}
                                 style={styles.textBoxInput}
                                 autoFocus={true}
@@ -25,7 +25,7 @@ export default ({ title, isEditing, onSubmitHeader, requestEdit, onPressAdd, onP
                         <View>
                             <TouchableOpacity
                                 style={styles.textBoxIconWrapper}
-                                onPress={() => onSubmitHeader(textInput)}
+                                onPress={() => onSubmitHeader && onSubmitHeader(textInput)}
                             >
                                 <Icon
                                     name="done"
@@ -38,31 +38,37 @@ export default ({ title, isEditing, onSubmitHeader, requestEdit, onPressAdd, onP
                 {!isEditing && 
                     <Text
                         style={styles.sectionHeaderTitle}
-                        onPress={requestEdit}
+                        onPress={() => {
+                            requestEdit && requestEdit();
+                        }}
                     >
-                            {title}
+                        {title}
                     </Text>
                 }
             </View>
             {!isEditing && <View style={{flexDirection: 'row', marginRight: 5}}>
-                <TouchableOpacity
-                    style={styles.sectionHeaderButton}
-                    onPress={onPressRemove}
-                >
-                    <Icon
-                        name="delete"
-                        iconStyle={styles.textBoxIcon}
-                    />
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.sectionHeaderButton}
-                    onPress={onPressAdd}
-                >
-                    <Icon
-                        name="add"
-                        iconStyle={styles.textBoxIcon}
-                    />
-                </TouchableOpacity>
+                {onPressRemove &&
+                    <TouchableOpacity
+                        style={styles.sectionHeaderButton}
+                        onPress={onPressRemove}
+                    >
+                        <Icon
+                            name="delete"
+                            iconStyle={styles.textBoxIcon}
+                        />
+                    </TouchableOpacity>
+                }
+                {onPressAdd && 
+                    <TouchableOpacity
+                        style={styles.sectionHeaderButton}
+                        onPress={onPressAdd}
+                    >
+                        <Icon
+                            name="add"
+                            iconStyle={styles.textBoxIcon}
+                        />
+                    </TouchableOpacity>
+                }
             </View>}
         </View>
     )

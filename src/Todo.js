@@ -48,8 +48,8 @@ export default ({ text, done, onToggleCheck, onDeleteTask, showCheckbox, isEditi
                         style={styles.text}
                         onPress={() => {
                             requestEdit && requestEdit();
-                        }
-                    }>
+                        }}
+                    >
                         {text}
                     </Text>
                 }

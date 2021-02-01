@@ -123,8 +123,7 @@ export default class HomeScreen extends React.Component {
             if (sectionsMap[todo.section]) {
                 sectionsMap[todo.section].data.push(todo);
             }
-        }
-        );
+        });
         return sectionsList;
     }
 
