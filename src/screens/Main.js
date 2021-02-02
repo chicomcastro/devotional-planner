@@ -38,6 +38,11 @@ class HomeScreen extends React.Component {
         this.setState({ showingKeyboard: false });
     }
 
+
+    // ---
+    // Todos (items)
+    // ---
+
     submitTodo = (key, textInput) => {
         let todos = [...this.props.todos];
         let currentItemIndex = todos.findIndex(todo => todo.key === key);
@@ -59,15 +64,6 @@ class HomeScreen extends React.Component {
         this.setState({ todos: todos });
     };
 
-    submitSection = (sectionKey, textInput) => {
-        if (!textInput && !this.props.todos.some(todos => todos.section === sectionKey)) {
-            this.props.removeSection(sectionKey);
-        }
-        this.props.submitSection({ sectionKey, textInput });
-    };
-
-    requestEditSection = this.props.editSection;
-
     toggleCheck = (key) => {
         this.setState(({ todos }) => ({
             todos: todos.map(todo => {
@@ -85,6 +81,31 @@ class HomeScreen extends React.Component {
         }));
     }
 
+
+    // ---
+    // Sections
+    // ---
+
+    submitSection = (sectionKey, textInput) => {
+        if (!textInput && !this.props.todos.some(todos => todos.section === sectionKey)) {
+            this.props.removeSection(sectionKey);
+        }
+        this.props.submitSection({ sectionKey, textInput });
+    };
+
+    requestEditSection = this.props.editSection;
+
+    addItemToSection = (sectionKey) => this.props.addItemToSection(this.state.date, sectionKey);
+
+    deleteSection = this.props.removeSection;
+
+    addSection = () => this.props.addSection(this.state.date);
+
+
+    // ---
+    // Render (jsx)
+    // ---
+    
     getSections = () => {
         let todos = [...this.props.todos];
         let sectionsProps = [...this.props.sections];
@@ -97,18 +118,6 @@ class HomeScreen extends React.Component {
             }
         });
         return sectionsList;
-    }
-
-    addItemToSection = (sectionKey) => {
-        this.props.addItemToSection(this.state.date, sectionKey);
-    }
-
-    deleteSection = (sectionKey) => {
-        this.props.removeSection(sectionKey);
-    }
-
-    addSection = () => {
-        this.props.addSection(this.state.date);
     }
 
     render() {
