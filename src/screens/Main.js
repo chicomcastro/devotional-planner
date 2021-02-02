@@ -9,24 +9,12 @@ import FloatingButton from '../FloatingButton.js';
 import { StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native';
 
-export default class HomeScreen extends React.Component {
+import { connect } from 'react-redux';
+
+class HomeScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            todos: [
-                { key: Math.random().toString(), done: false, title: 'Leitura bíblica', section: 'Leitura bíblica' },
-                { key: Math.random().toString(), done: false, title: 'Gratidão', section: 'Leitura bíblica' },
-                { key: Math.random().toString(), done: false, title: 'Oração', section: 'Leitura bíblica' },
-                { key: Math.random().toString(), done: false, title: 'Decisão', section: 'Leitura bíblica' },
-                { key: Math.random().toString(), done: false, title: 'Jejum', section: 'Leitura bíblica' },
-            ],
-            sections: [
-                {
-                    key: Math.random().toString(),
-                    title: "Leitura bíblica",
-                    checkable: false,
-                },
-            ],
             textInput: '',
             showingKeyboard: false,
             date: new Date(),
@@ -115,11 +103,12 @@ export default class HomeScreen extends React.Component {
     }
 
     getSections = () => {
+        return [];
         let todos = [...this.state.todos];
         let sectionsProps = [...this.state.sections];
         let sectionsList = sectionsProps.map(section => { return { ...section, data: [] } });
         let sectionsMap = {};
-        sectionsList.forEach(section => sectionsMap[section.title] = section);
+        sectionsList.forEach(section => sectionsMap[section.key] = section);
         todos.forEach(todo => {
             if (sectionsMap[todo.section]) {
                 sectionsMap[todo.section].data.push(todo);
@@ -131,7 +120,17 @@ export default class HomeScreen extends React.Component {
     addItemToSection = (sectionKey) => {
         let section = [...this.state.sections].find(section => section.key === sectionKey);
         this.setState(({ todos }) => ({
-            todos: [...todos, { key: Math.random().toString(), done: false, title: '', section: section.title, isEditing: true }],
+            todos: [
+                ...todos,
+                {
+                    key: Math.random().toString(),
+                    done: false,
+                    dateTime: new Date().valueOf(),
+                    title: '',
+                    section: section.title,
+                    isEditing: true
+                }
+            ],
         }));
     }
 
@@ -200,6 +199,13 @@ export default class HomeScreen extends React.Component {
         );
     }
 }
+
+const mapStateToProps = (state) => {
+    console.log(state);
+    return { todos: state.todos, sections: state.sections };
+};
+
+export default connect(mapStateToProps)(HomeScreen);
 
 const styles = StyleSheet.create({
     container: {

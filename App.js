@@ -10,6 +10,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import GeneralScreen from './src/screens/GeneralScreen.js';
 import { Icon } from 'react-native-elements';
 import colors from './src/utils/colors.js';
+import { persistor, store } from './src/redux/redux.js';
+
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react'
 
 const Tab = createBottomTabNavigator();
 
@@ -22,7 +26,7 @@ const routeNames = {
     SETTINGS: 'Configurações',
 }
 
-const TabNavigator = () => 
+const TabNavigator = () =>
     <Tab.Navigator
         screenOptions={({ route }) => ({
             tabBarIcon: ({ focused, color, size }) => {
@@ -52,11 +56,15 @@ const TabNavigator = () =>
 export default class App extends React.Component {
     render() {
         return (
-            <NavigationContainer>
-                <Stack.Navigator>
-                    <Stack.Screen name="Nick's Planner" component={TabNavigator}></Stack.Screen>
-                </Stack.Navigator>
-            </NavigationContainer>
+            <Provider store={store}>
+                <PersistGate loading={null} persistor={persistor}>
+                    <NavigationContainer>
+                        <Stack.Navigator>
+                            <Stack.Screen name="Nick's Planner" component={TabNavigator}></Stack.Screen>
+                        </Stack.Navigator>
+                    </NavigationContainer>
+                </PersistGate>
+            </Provider>
         );
     }
 }
