@@ -4,8 +4,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import colors from './utils/colors';
 import { TouchableOpacity } from 'react-native';
 
-export const DatePicker = () => {
-    const [date, setDate] = useState(new Date());
+export const DatePicker = ({ date, setDate }) => {
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
 
@@ -37,7 +36,7 @@ export const DatePicker = () => {
                     <Text style={styles.text}>{'<'}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={showDatepicker} style={styles.mainButton}>
-                    <Text style={styles.text}>{(date).toString().slice(0,10)}</Text>
+                    <Text style={styles.text}>{(date).toString().slice(0, 10)}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => addToDate(1)} style={styles.secondaryButton}>
                     <Text style={styles.text}>{'>'}</Text>

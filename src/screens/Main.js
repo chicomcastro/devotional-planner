@@ -29,6 +29,7 @@ export default class HomeScreen extends React.Component {
             ],
             textInput: '',
             showingKeyboard: false,
+            date: new Date(),
         };
         this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
         this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
@@ -160,7 +161,10 @@ export default class HomeScreen extends React.Component {
                 style={styles.container}
             >
                 <StatusBar backgroundColor={colors.white} barStyle='dark-content'></StatusBar>
-                <DatePicker></DatePicker>
+                <DatePicker
+                    date={this.state.date}
+                    setDate={(date) => this.setState({ date })}
+                ></DatePicker>
                 <SectionList
                     style={styles.sectionList}
                     sections={this.getSections()}
