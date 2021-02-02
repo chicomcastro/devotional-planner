@@ -13,8 +13,35 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 todos: [
                     ...state.todos,
-                    value.newItem
+                    value
                 ],
+            };
+        case actionTypes.ADD_SECTION:
+            return {
+                ...state,
+                sections: [
+                    ...state.sections,
+                    value
+                ],
+            };
+        case actionTypes.UPDATE_SECTION:
+            let sections = [...state.sections];
+            let currentSectionIndex = sections.findIndex(section => section.key === value.sectionKey);
+            sections[currentSectionIndex] = {
+                ...sections[currentSectionIndex],
+                isEditing: false,
+                title: value.textInput,
+            };
+            let todos = [...state.todos];
+            todos.forEach(todo => {
+                if (todo.section === value.sectionKey) {
+                    todo.section = value.sectionKey;
+                }
+            });
+            return {
+                ...state,
+                sections,
+                todos,
             };
         default:
             return state;

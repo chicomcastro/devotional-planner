@@ -25,4 +25,10 @@ export default {
             value: sectionKey
         };
     },
+    updateSection: (sectionKey) => {
+        return {
+            type: actionTypes.UPDATE_SECTION,
+            value: sectionKey
+        };
+    },
 };

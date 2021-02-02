@@ -10,6 +10,8 @@ import { StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native';
 
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import actions from '../redux/actions.js';
 
 class HomeScreen extends React.Component {
     constructor(props) {
@@ -57,22 +59,8 @@ class HomeScreen extends React.Component {
         this.setState({ todos: todos });
     };
 
-    submitHeader = (key, textInput) => {
-        let sections = [...this.state.sections];
-        let currentSectionIndex = this.state.sections.findIndex(section => section.key === key);
-        let originalTitle = sections[currentSectionIndex].title;
-        sections[currentSectionIndex] = {
-            ...sections[currentSectionIndex],
-            isEditing: false,
-            title: textInput,
-        };
-        let todos = [...this.state.todos];
-        todos.forEach(todo => {
-            if (todo.section === originalTitle) {
-                todo.section = textInput;
-            }
-        })
-        this.setState({ sections: sections, todos: todos });
+    updateSection = (sectionKey, textInput) => {
+        this.props.updateSection({ sectionKey, textInput });
     };
 
     requestEditSection = (key) => {
@@ -103,9 +91,8 @@ class HomeScreen extends React.Component {
     }
 
     getSections = () => {
-        return [];
-        let todos = [...this.state.todos];
-        let sectionsProps = [...this.state.sections];
+        let todos = [...this.props.todos];
+        let sectionsProps = [...this.props.sections];
         let sectionsList = sectionsProps.map(section => { return { ...section, data: [] } });
         let sectionsMap = {};
         sectionsList.forEach(section => sectionsMap[section.key] = section);
@@ -149,9 +136,7 @@ class HomeScreen extends React.Component {
             checkable: false,
             isEditing: true,
         };
-        this.setState(({ sections }) => ({
-            sections: [...sections, newSection]
-        }));
+        this.props.addSection(newSection);
     }
 
     render() {
@@ -184,7 +169,7 @@ class HomeScreen extends React.Component {
                         <SectionHeader
                             title={title}
                             isEditing={isEditing}
-                            onSubmitHeader={(textInput) => this.submitHeader(key, textInput)}
+                            onSubmitHeader={(textInput) => this.updateSection(key, textInput)}
                             requestEdit={() => this.requestEditSection(key)}
                             onPressAdd={() => this.addItemToSection(key)}
                             onPressRemove={() => this.deleteSection(key)}
@@ -205,7 +190,15 @@ const mapStateToProps = (state) => {
     return { todos: state.todos, sections: state.sections };
 };
 
-export default connect(mapStateToProps)(HomeScreen);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        addItemToSection: bindActionCreators(actions.addItem, dispatch),
+        addSection: bindActionCreators(actions.addSection, dispatch),
+        updateSection: bindActionCreators(actions.updateSection, dispatch),
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
 
 const styles = StyleSheet.create({
     container: {
