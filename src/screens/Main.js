@@ -105,24 +105,11 @@ class HomeScreen extends React.Component {
     }
 
     addItemToSection = (sectionKey) => {
-        let section = [...this.state.sections].find(section => section.key === sectionKey);
-        this.setState(({ todos }) => ({
-            todos: [
-                ...todos,
-                {
-                    key: Math.random().toString(),
-                    done: false,
-                    dateTime: new Date().valueOf(),
-                    title: '',
-                    section: section.title,
-                    isEditing: true
-                }
-            ],
-        }));
+        this.props.addItemToSection(this.state.date, sectionKey);
     }
 
     deleteSection = (sectionKey) => {
-        this.props.removeSection(sectionKey)
+        this.props.removeSection(sectionKey);
     }
 
     addSection = () => {

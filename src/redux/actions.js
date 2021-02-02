@@ -1,10 +1,10 @@
 import actionTypes from "./actionTypes";
 
 export default {
-    addItem: (item) => {
+    addItem: (itemDate, sectionKey) => {
         return {
             type: actionTypes.ADD_ITEM,
-            value: item
+            value: { itemDate, sectionKey }
         };
     },
     addSection: (sectionDate) => {

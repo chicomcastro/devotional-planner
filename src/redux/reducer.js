@@ -10,23 +10,32 @@ const reducer = (state = initialState, action) => {
 
     switch (type) {
         case actionTypes.ADD_ITEM:
-            return (function() {
+            return (function () {
+                let { sectionKey, itemDate } = value;
                 return {
                     ...state,
                     todos: [
                         ...state.todos,
-                        value
+                        {
+                            key: Math.random().toString(),
+                            done: false,
+                            creation: new Date().valueOf(),
+                            title: '',
+                            section: sectionKey,
+                            day: itemDate.toISOString().slice(0, 10),
+                            isEditing: true
+                        }
                     ],
                 };
             })();
         case actionTypes.ADD_SECTION:
-            return (function() {
+            return (function () {
                 let newSection = {
                     key: Math.random().toString(),
                     title: "",
                     checkable: false,
                     isEditing: true,
-                    creation: value.valueOf(),
+                    creation: new Date().valueOf(),
                     day: value.toISOString().slice(0, 10),
                 };
                 return {
@@ -38,7 +47,7 @@ const reducer = (state = initialState, action) => {
                 };
             })();
         case actionTypes.UPDATE_SECTION:
-            return (function() {
+            return (function () {
                 let sections = [...state.sections];
                 let currentSectionIndex = sections.findIndex(section => section.key === value.sectionKey);
                 sections[currentSectionIndex] = {
@@ -59,7 +68,7 @@ const reducer = (state = initialState, action) => {
                 };
             })();
         case actionTypes.REMOVE_SECTION:
-            return (function() {
+            return (function () {
                 let sectionKey = value;
                 let sections = [...state.sections];
                 let currentSection = sections.find(section => section.key === sectionKey);
