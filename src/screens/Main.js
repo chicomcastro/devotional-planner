@@ -39,8 +39,8 @@ class HomeScreen extends React.Component {
     }
 
     submitTodo = (key, textInput) => {
-        let todos = [...this.state.todos];
-        let currentItemIndex = this.state.todos.findIndex(todo => todo.key === key);
+        let todos = [...this.props.todos];
+        let currentItemIndex = todos.findIndex(todo => todo.key === key);
         todos[currentItemIndex] = {
             ...todos[currentItemIndex],
             isEditing: false,
@@ -50,8 +50,8 @@ class HomeScreen extends React.Component {
     };
 
     requestEditTodo = (key) => {
-        let todos = [...this.state.todos];
-        let currentItemIndex = this.state.todos.findIndex(todo => todo.key === key);
+        let todos = [...this.props.todos];
+        let currentItemIndex = this.props.todos.findIndex(todo => todo.key === key);
         todos[currentItemIndex] = {
             ...todos[currentItemIndex],
             isEditing: true,
@@ -59,19 +59,14 @@ class HomeScreen extends React.Component {
         this.setState({ todos: todos });
     };
 
-    updateSection = (sectionKey, textInput) => {
-        this.props.updateSection({ sectionKey, textInput });
+    submitSection = (sectionKey, textInput) => {
+        if (!textInput && !this.props.todos.some(todos => todos.section === sectionKey)) {
+            this.props.removeSection(sectionKey);
+        }
+        this.props.submitSection({ sectionKey, textInput });
     };
 
-    requestEditSection = (key) => {
-        let sections = [...this.state.sections];
-        let currentSectionIndex = this.state.sections.findIndex(section => section.key === key);
-        sections[currentSectionIndex] = {
-            ...sections[currentSectionIndex],
-            isEditing: true,
-        };
-        this.setState({ sections: sections });
-    };
+    requestEditSection = this.props.editSection;
 
     toggleCheck = (key) => {
         this.setState(({ todos }) => ({
@@ -146,7 +141,7 @@ class HomeScreen extends React.Component {
                         <SectionHeader
                             title={title}
                             isEditing={isEditing}
-                            onSubmitHeader={(textInput) => this.updateSection(key, textInput)}
+                            onSubmitHeader={(textInput) => this.submitSection(key, textInput)}
                             requestEdit={() => this.requestEditSection(key)}
                             onPressAdd={() => this.addItemToSection(key)}
                             onPressRemove={() => this.deleteSection(key)}
@@ -171,7 +166,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         addItemToSection: bindActionCreators(actions.addItem, dispatch),
         addSection: bindActionCreators(actions.addSection, dispatch),
-        updateSection: bindActionCreators(actions.updateSection, dispatch),
+        submitSection: bindActionCreators(actions.submitSection, dispatch),
+        editSection: bindActionCreators(actions.editSection, dispatch),
         removeSection: bindActionCreators(actions.removeSection, dispatch),
     };
 };

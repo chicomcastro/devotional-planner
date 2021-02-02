@@ -46,7 +46,7 @@ const reducer = (state = initialState, action) => {
                     ],
                 };
             })();
-        case actionTypes.UPDATE_SECTION:
+        case actionTypes.SUBMIT_SECTION:
             return (function () {
                 let sections = [...state.sections];
                 let currentSectionIndex = sections.findIndex(section => section.key === value.sectionKey);
@@ -65,6 +65,20 @@ const reducer = (state = initialState, action) => {
                     ...state,
                     sections,
                     todos,
+                };
+            })();
+        case actionTypes.EDIT_SECTION:
+            return (function () {
+                let sectionKey = value;
+                let sections = [...state.sections];
+                let currentSectionIndex = sections.findIndex(section => section.key === sectionKey);
+                sections[currentSectionIndex] = {
+                    ...sections[currentSectionIndex],
+                    isEditing: true,
+                };
+                return {
+                    ...state,
+                    sections,
                 };
             })();
         case actionTypes.REMOVE_SECTION:

@@ -25,10 +25,16 @@ export default {
             value: sectionKey
         };
     },
-    updateSection: (keyAndUpdatedText) => {
+    submitSection: (keyAndUpdatedText) => {
         return {
-            type: actionTypes.UPDATE_SECTION,
+            type: actionTypes.SUBMIT_SECTION,
             value: keyAndUpdatedText
+        };
+    },
+    editSection: (sectionKey) => {
+        return {
+            type: actionTypes.EDIT_SECTION,
+            value: sectionKey
         };
     },
 };

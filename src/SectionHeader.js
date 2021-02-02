@@ -15,11 +15,12 @@ export default ({ title, isEditing, onSubmitHeader, requestEdit, onPressAdd, onP
                             <TextInput
                                 placeholder="O que você quer fazer?"
                                 onChangeText={textInput => setTextInput(textInput)}
-                                onSubmitEditing={() => onSubmitHeader && onSubmitHeader(textInput)}
                                 value={textInput}
                                 style={styles.textBoxInput}
                                 autoFocus={true}
                                 multiline={true}
+                                blurOnSubmit={true}
+                                onBlur={() => onSubmitHeader && onSubmitHeader(textInput)}
                             />
                         </View>
                         <View>

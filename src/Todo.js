@@ -23,11 +23,12 @@ export default ({ text, done, onToggleCheck, onDeleteTask, showCheckbox, isEditi
                             <TextInput
                                 placeholder="O que você quer fazer?"
                                 onChangeText={textInput => setTextInput(textInput)}
-                                onSubmitEditing={() => onSubmitTodo && onSubmitTodo(textInput)}
                                 value={textInput}
                                 style={styles.textBoxInput}
                                 autoFocus={true}
                                 multiline={true}
+                                blurOnSubmit={true}
+                                onBlur={() => onSubmitTodo && onSubmitTodo(textInput)}
                             />
                         </View>
                         <View>
