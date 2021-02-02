@@ -7,10 +7,10 @@ export default {
             value: item
         };
     },
-    addSection: (section) => {
+    addSection: (sectionDate) => {
         return {
             type: actionTypes.ADD_SECTION,
-            value: section
+            value: sectionDate
         };
     },
     removeItem: (itemKey) => {
@@ -25,10 +25,10 @@ export default {
             value: sectionKey
         };
     },
-    updateSection: (sectionKey) => {
+    updateSection: (keyAndUpdatedText) => {
         return {
             type: actionTypes.UPDATE_SECTION,
-            value: sectionKey
+            value: keyAndUpdatedText
         };
     },
 };

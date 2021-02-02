@@ -122,21 +122,11 @@ class HomeScreen extends React.Component {
     }
 
     deleteSection = (sectionKey) => {
-        let sections = [...this.state.sections];
-        let currentSection = sections.find(section => section.key === sectionKey);
-        let filteredTodos = [...this.state.todos].filter(todo => todo.section !== currentSection.title);
-        let filteredSections = sections.filter(section => section.key !== sectionKey);
-        this.setState({ sections: filteredSections, todos: filteredTodos });
+        this.props.removeSection(sectionKey)
     }
 
     addSection = () => {
-        let newSection = {
-            key: Math.random().toString(),
-            title: "",
-            checkable: false,
-            isEditing: true,
-        };
-        this.props.addSection(newSection);
+        this.props.addSection(this.state.date);
     }
 
     render() {
@@ -195,6 +185,7 @@ const mapDispatchToProps = (dispatch) => {
         addItemToSection: bindActionCreators(actions.addItem, dispatch),
         addSection: bindActionCreators(actions.addSection, dispatch),
         updateSection: bindActionCreators(actions.updateSection, dispatch),
+        removeSection: bindActionCreators(actions.removeSection, dispatch),
     };
 };
 
