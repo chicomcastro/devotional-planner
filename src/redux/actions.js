@@ -1,25 +1,37 @@
 import actionTypes from "./actionTypes";
 
 export default {
-    addItem: (itemDate, sectionKey) => {
+    insertItem: (itemDate, sectionKey) => {
         return {
-            type: actionTypes.ADD_ITEM,
+            type: actionTypes.INSERT_ITEM,
             value: { itemDate, sectionKey }
         };
     },
-    addSection: (sectionDate) => {
+    updateItem: (todoKey, updatedValues) => {
         return {
-            type: actionTypes.ADD_SECTION,
+            type: actionTypes.UPDATE_ITEM,
+            value: { todoKey, updatedValues }
+        };
+    },
+    deleteItem: (todoKey) => {
+        return {
+            type: actionTypes.DELETE_ITEM,
+            value: todoKey
+        };
+    },
+    insertSection: (sectionDate) => {
+        return {
+            type: actionTypes.INSERT_SECTION,
             value: sectionDate
         };
     },
     removeItem: (itemKey) => {
         return {
-            type: actionTypes.REMOVE_ITEM,
+            type: actionTypes.DELETE_ITEM,
             value: itemKey
         };
     },
-    removeSection: (sectionKey) => {
+    deleteSection: (sectionKey) => {
         return {
             type: actionTypes.DELETE_SECTION,
             value: sectionKey

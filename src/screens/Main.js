@@ -88,18 +88,18 @@ class HomeScreen extends React.Component {
 
     submitSection = (sectionKey, textInput) => {
         if (!textInput && !this.props.todos.some(todos => todos.section === sectionKey)) {
-            this.props.removeSection(sectionKey);
+            this.props.deleteSection(sectionKey);
         }
         this.props.submitSection({ sectionKey, textInput });
     };
 
     requestEditSection = this.props.toggleEditSection;
 
-    addItemToSection = (sectionKey) => this.props.addItemToSection(this.state.date, sectionKey);
+    insertItemToSection = (sectionKey) => this.props.insertItemToSection(this.state.date, sectionKey);
 
-    deleteSection = this.props.removeSection;
+    deleteSection = this.props.deleteSection;
 
-    addSection = () => this.props.addSection(this.state.date);
+    insertSection = () => this.props.insertSection(this.state.date);
 
 
     // ---
@@ -152,7 +152,7 @@ class HomeScreen extends React.Component {
                             isEditing={isEditing}
                             onSubmitHeader={(textInput) => this.submitSection(key, textInput)}
                             requestEdit={() => this.requestEditSection(key)}
-                            onPressAdd={() => this.addItemToSection(key)}
+                            onPressAdd={() => this.insertItemToSection(key)}
                             onPressRemove={() => this.deleteSection(key)}
                         ></SectionHeader>
                     )}
@@ -160,7 +160,7 @@ class HomeScreen extends React.Component {
                         <View style={styles.sectionFooter}></View>
                     )}
                 />
-                {!this.state.showingKeyboard && <FloatingButton onPress={this.addSection}></FloatingButton>}
+                {!this.state.showingKeyboard && <FloatingButton onPress={this.insertSection}></FloatingButton>}
             </SafeAreaView>
         );
     }
@@ -172,11 +172,16 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        addItemToSection: bindActionCreators(actions.addItem, dispatch),
-        addSection: bindActionCreators(actions.addSection, dispatch),
+        // SECTIONs
+        insertItemToSection: bindActionCreators(actions.insertItem, dispatch),
+        insertSection: bindActionCreators(actions.insertSection, dispatch),
         submitSection: bindActionCreators(actions.submitSection, dispatch),
         toggleEditSection: bindActionCreators(actions.toggleEditSection, dispatch),
-        removeSection: bindActionCreators(actions.removeSection, dispatch),
+        deleteSection: bindActionCreators(actions.deleteSection, dispatch),
+        // TODOs
+        insertTodo: bindActionCreators(actions.insertItem, dispatch),
+        updateTodo: bindActionCreators(actions.updateItem, dispatch),
+        deleteTodo: bindActionCreators(actions.deleteItem, dispatch),
     };
 };
 
