@@ -4,18 +4,21 @@ import CheckBox from '@react-native-community/checkbox';
 import { Icon } from 'react-native-elements';
 import colors from './utils/colors';
 
-export default ({ text, done, onToggleCheck, onDeleteTask, showCheckbox, isEditing, onSubmitTodo, requestEdit }) => {
+export default ({ text, done, onToggleCheck, onDeleteTask, showCheckbox, onSubmit }) => {
     const [textInput, setTextInput] = useState(text);
+    const [isEditing, setIsEditing] = useState(!textInput);
 
     return (
         <View style={styles.container}>
-            {showCheckbox && <View style={styles.checkBoxWrapper}>
-                <CheckBox
-                    value={done}
-                    onValueChange={onToggleCheck}
-                    style={styles.checkBox}
-                />
-            </View>}
+            {showCheckbox && 
+                <View style={styles.checkBoxWrapper}>
+                    <CheckBox
+                        value={done}
+                        onValueChange={onToggleCheck}
+                        style={styles.checkBox}
+                    />
+                </View>
+            }
             <View style={styles.wrapper}>
                 {isEditing &&
                     <View style={styles.textBox}>
@@ -28,13 +31,19 @@ export default ({ text, done, onToggleCheck, onDeleteTask, showCheckbox, isEditi
                                 autoFocus={true}
                                 multiline={true}
                                 blurOnSubmit={true}
-                                onBlur={() => onSubmitTodo && onSubmitTodo(textInput)}
+                                onBlur={() => {
+                                    onSubmit && onSubmit(textInput);
+                                    onSubmit && setIsEditing(false);
+                                }}
                             />
                         </View>
                         <View>
                             <TouchableOpacity
                                 style={styles.textBoxIconWrapper}
-                                onPress={() => onSubmitTodo && onSubmitTodo(textInput)}
+                                onPress={() => {
+                                    onSubmit && onSubmit(textInput);
+                                    onSubmit && setIsEditing(false);
+                                }}
                             >
                                 <Icon
                                     name="done"
@@ -47,9 +56,7 @@ export default ({ text, done, onToggleCheck, onDeleteTask, showCheckbox, isEditi
                 {!isEditing && 
                     <Text
                         style={styles.text}
-                        onPress={() => {
-                            requestEdit && requestEdit();
-                        }}
+                        onPress={() => onSubmit && setIsEditing(true)}
                     >
                         {text}
                     </Text>

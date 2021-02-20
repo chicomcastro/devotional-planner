@@ -44,10 +44,11 @@ class HomeScreen extends React.Component {
     // ---
 
     submitTodo = (key, textInput) => {
-        this.props.updateTodo(key, { isEditing: false, title: textInput });
+        if (!textInput) {
+            this.props.deleteTodo(key);
+        }
+        this.props.updateTodo(key, { title: textInput });
     };
-
-    requestEditTodo = (key) => this.props.updateTodo(key, { isEditing: true });
 
     toggleCheck = (key) => {
         let todo = this.props.todos.find(todo => todo.key === key);
@@ -67,8 +68,6 @@ class HomeScreen extends React.Component {
         }
         this.props.submitSection({ sectionKey, textInput });
     };
-
-    requestEditSection = this.props.toggleEditSection;
 
     insertItemToSection = (sectionKey) => this.props.insertItemToSection(this.state.date, sectionKey);
 
@@ -114,19 +113,15 @@ class HomeScreen extends React.Component {
                             text={item.title}
                             done={item.done}
                             showCheckbox={section.checkable}
-                            onSubmitTodo={(textInput) => this.submitTodo(item.key, textInput)}
+                            onSubmit={(textInput) => this.submitTodo(item.key, textInput)}
                             onToggleCheck={() => this.toggleCheck(item.key, section)}
                             onDeleteTask={() => this.deleteTodo(item.key, section)}
-                            isEditing={item.isEditing}
-                            requestEdit={() => this.requestEditTodo(item.key)}
                         />
                     )}
-                    renderSectionHeader={({ section: { key, title, isEditing } }) => (
+                    renderSectionHeader={({ section: { key, title } }) => (
                         <SectionHeader
                             title={title}
-                            isEditing={isEditing}
-                            onSubmitHeader={(textInput) => this.submitSection(key, textInput)}
-                            requestEdit={() => this.requestEditSection(key)}
+                            onSubmit={(textInput) => this.submitSection(key, textInput)}
                             onPressAdd={() => this.insertItemToSection(key)}
                             onPressRemove={() => this.deleteSection(key)}
                         ></SectionHeader>

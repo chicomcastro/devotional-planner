@@ -1,17 +1,17 @@
 
 import 'react-native-gesture-handler';
 import React from 'react';
-import HomeScreen from './src/screens/Main.js';
+import HomeScreen from './src/screens/MainScreen.js';
 import SettingsScreen from './src/screens/SettingsScreen.js';
+import GeneralScreen from './src/screens/GeneralScreen.js';
+
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import GeneralScreen from './src/screens/GeneralScreen.js';
 import { Icon } from 'react-native-elements';
 import colors from './src/utils/colors.js';
-import { persistor, store } from './src/redux/redux.js';
 
+import { persistor, store } from './src/redux/redux.js';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react'
 

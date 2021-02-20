@@ -1,46 +1,69 @@
 import React from 'react';
 import { StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native';
-import { StyleSheet, TextInput, View, FlatList, KeyboardAvoidingView, TouchableOpacity, SectionList, Text } from 'react-native';
+import { StyleSheet,  View, SectionList } from 'react-native';
+
 import SectionHeader from '../SectionHeader';
 import Todo from '../Todo';
 import colors from '../utils/colors';
 
-export default class GeneralScreen extends React.Component {
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import actions from '../redux/actions';
+
+class GeneralScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            todos: [
-                { key: Math.random().toString(), done: false, title: 'Leitura bíblica', date: '2020-01-01' },
-                { key: Math.random().toString(), done: false, title: 'Gratidão', date: '2020-01-01' },
-                { key: Math.random().toString(), done: false, title: 'Oração', date: '2020-01-02' },
-                { key: Math.random().toString(), done: false, title: 'Decisão', date: '2020-01-02' },
-                { key: Math.random().toString(), done: false, title: 'Jejum', date: '2020-01-03' },
-            ],
+            textInput: '',
         };
     };
 
-    renderItem = ({ item }) => (
+    // ---
+    // Todos (items)
+    // ---
+
+    submitTodo = (key, textInput) => {
+        if (!textInput) {
+            this.props.deleteTodo(key);
+        }
+        this.props.updateTodo(key, { isEditing: false, title: textInput });
+    };
+
+    requestEditTodo = (key) => this.props.updateTodo(key, { isEditing: true });
+
+    toggleCheck = (key) => {
+        let todo = this.props.todos.find(todo => todo.key === key);
+        this.props.updateTodo(key, { done: !todo.done });
+    }
+
+    deleteTodo = this.props.deleteTodo;
+
+    renderItem = ({ item, index, section }) => (
         <Todo
             text={item.title}
-            showCheckbox={false}
+            done={item.done}
+            showCheckbox={section.checkable}
+            onSubmit={(textInput) => this.submitTodo(item.key, textInput)}
+            onToggleCheck={() => this.toggleCheck(item.key, section)}
+            onDeleteTask={() => this.deleteTodo(item.key, section)}
         />
     );
 
     getSections = () => {
-        let todos = [...this.state.todos];
+        let todos = [...this.props.todos];
         let sectionsMap = {};
         todos.forEach(todo => {
-            if (!sectionsMap[todo.date]) {
+            if (!sectionsMap[todo.day]) {
                 let section = {
                     key: Math.random().toString(),
-                    title: new Date(todo.date).toGMTString().slice(0,11),
-                    checkable: false,
+                    title: new Date(todo.day).toGMTString().slice(0,11),
+                    checkable: true,
                     data: [],
                 };
-                sectionsMap[todo.date] = section;
+                sectionsMap[todo.day] = section;
             }
-            sectionsMap[todo.date].data.push(todo);
+            sectionsMap[todo.day].data.push(todo);
         });
         return Object.values(sectionsMap);
     }
@@ -54,13 +77,7 @@ export default class GeneralScreen extends React.Component {
                 <SectionList
                     sections={this.getSections()}
                     keyExtractor={(item, index) => item.key + index}
-                    renderItem={({ item, index, section }) => 
-                        <Todo
-                            text={item.title}
-                            done={item.done}
-                            showCheckbox={section.checkable}
-                        />
-                    }
+                    renderItem={this.renderItem}
                     renderSectionHeader={({ section: { key, title, isEditing } }) => (
                         <SectionHeader
                             title={title}
@@ -74,6 +91,26 @@ export default class GeneralScreen extends React.Component {
         );
     }
 }
+
+const mapStateToProps = (state) => {
+    return { todos: state.todos, sections: state.sections };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        // SECTIONs
+        insertSection: bindActionCreators(actions.insertSection, dispatch),
+        submitSection: bindActionCreators(actions.submitSection, dispatch),
+        toggleEditSection: bindActionCreators(actions.toggleEditSection, dispatch),
+        deleteSection: bindActionCreators(actions.deleteSection, dispatch),
+        // TODOs
+        insertItemToSection: bindActionCreators(actions.insertItem, dispatch),
+        updateTodo: bindActionCreators(actions.updateItem, dispatch),
+        deleteTodo: bindActionCreators(actions.deleteItem, dispatch),
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(GeneralScreen);
 
 const styles = StyleSheet.create({
     container: {

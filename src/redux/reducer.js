@@ -27,7 +27,6 @@ const reducer = (state = initialState, action) => {
                             title: '',
                             section: sectionKey,
                             day: itemDate.toISOString().slice(0, 10),
-                            isEditing: true
                         }
                     ],
                 };
@@ -65,8 +64,7 @@ const reducer = (state = initialState, action) => {
                 let newSection = {
                     key: new Date().valueOf(),
                     title: "",
-                    checkable: false,
-                    isEditing: true,
+                    checkable: true,
                     lastUpdate: new Date().valueOf(),
                     day: value.toISOString().slice(0, 10),
                 };

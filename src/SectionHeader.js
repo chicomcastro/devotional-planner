@@ -3,8 +3,9 @@ import { Text, View, StyleSheet, TextInput, TouchableOpacity } from 'react-nativ
 import { Icon } from 'react-native-elements';
 import colors from './utils/colors';
 
-export default ({ title, isEditing, onSubmitHeader, requestEdit, onPressAdd, onPressRemove }) => {
+export default ({ title, onSubmit, onPressAdd, onPressRemove }) => {
     const [textInput, setTextInput] = useState(title);
+    const [isEditing, setIsEditing] = useState(!textInput);
 
     return (
         <View style={styles.sectionHeader}>
@@ -20,13 +21,19 @@ export default ({ title, isEditing, onSubmitHeader, requestEdit, onPressAdd, onP
                                 autoFocus={true}
                                 multiline={true}
                                 blurOnSubmit={true}
-                                onBlur={() => onSubmitHeader && onSubmitHeader(textInput)}
+                                onBlur={() => {
+                                    onSubmit && onSubmit(textInput);
+                                    onSubmit && setIsEditing(false);
+                                }}
                             />
                         </View>
                         <View>
                             <TouchableOpacity
                                 style={styles.textBoxIconWrapper}
-                                onPress={() => onSubmitHeader && onSubmitHeader(textInput)}
+                                onPress={() => {
+                                    onSubmit && onSubmit(textInput);
+                                    onSubmit && setIsEditing(false);
+                                }}
                             >
                                 <Icon
                                     name="done"
@@ -39,9 +46,7 @@ export default ({ title, isEditing, onSubmitHeader, requestEdit, onPressAdd, onP
                 {!isEditing && 
                     <Text
                         style={styles.sectionHeaderTitle}
-                        onPress={() => {
-                            requestEdit && requestEdit();
-                        }}
+                        onPress={() => onSubmit && setIsEditing(true)}
                     >
                         {title}
                     </Text>
