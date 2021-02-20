@@ -44,42 +44,17 @@ class HomeScreen extends React.Component {
     // ---
 
     submitTodo = (key, textInput) => {
-        let todos = [...this.props.todos];
-        let currentItemIndex = todos.findIndex(todo => todo.key === key);
-        todos[currentItemIndex] = {
-            ...todos[currentItemIndex],
-            isEditing: false,
-            title: textInput,
-        };
-        this.setState({ todos: todos });
+        this.props.updateTodo(key, { isEditing: false, title: textInput });
     };
 
-    requestEditTodo = (key) => {
-        let todos = [...this.props.todos];
-        let currentItemIndex = this.props.todos.findIndex(todo => todo.key === key);
-        todos[currentItemIndex] = {
-            ...todos[currentItemIndex],
-            isEditing: true,
-        };
-        this.setState({ todos: todos });
-    };
+    requestEditTodo = (key) => this.props.updateTodo(key, { isEditing: true });
 
     toggleCheck = (key) => {
-        this.setState(({ todos }) => ({
-            todos: todos.map(todo => {
-                if (todo.key === key) {
-                    todo.done = !todo.done;
-                }
-                return todo;
-            }),
-        }));
+        let todo = this.props.todos.find(todo => todo.key === key);
+        this.props.updateTodo(key, { done: !todo.done });
     }
 
-    deleteTask = (key) => {
-        this.setState(({ todos }) => ({
-            todos: todos.filter(todo => todo.key !== key),
-        }));
-    }
+    deleteTodo = this.props.deleteTodo;
 
 
     // ---
@@ -105,7 +80,7 @@ class HomeScreen extends React.Component {
     // ---
     // Render (jsx)
     // ---
-    
+
     getSections = () => {
         let todos = [...this.props.todos].filter(todo => todo.day === this.state.date.toISOString().slice(0, 10));
         let sectionsProps = [...this.props.sections].filter(section => section.day === this.state.date.toISOString().slice(0, 10));
@@ -141,7 +116,7 @@ class HomeScreen extends React.Component {
                             showCheckbox={section.checkable}
                             onSubmitTodo={(textInput) => this.submitTodo(item.key, textInput)}
                             onToggleCheck={() => this.toggleCheck(item.key, section)}
-                            onDeleteTask={() => this.deleteTask(item.key, section)}
+                            onDeleteTask={() => this.deleteTodo(item.key, section)}
                             isEditing={item.isEditing}
                             requestEdit={() => this.requestEditTodo(item.key)}
                         />
@@ -173,13 +148,12 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         // SECTIONs
-        insertItemToSection: bindActionCreators(actions.insertItem, dispatch),
         insertSection: bindActionCreators(actions.insertSection, dispatch),
         submitSection: bindActionCreators(actions.submitSection, dispatch),
         toggleEditSection: bindActionCreators(actions.toggleEditSection, dispatch),
         deleteSection: bindActionCreators(actions.deleteSection, dispatch),
         // TODOs
-        insertTodo: bindActionCreators(actions.insertItem, dispatch),
+        insertItemToSection: bindActionCreators(actions.insertItem, dispatch),
         updateTodo: bindActionCreators(actions.updateItem, dispatch),
         deleteTodo: bindActionCreators(actions.deleteItem, dispatch),
     };
