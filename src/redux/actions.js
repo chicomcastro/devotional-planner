@@ -21,19 +21,19 @@ export default {
     },
     removeSection: (sectionKey) => {
         return {
-            type: actionTypes.REMOVE_SECTION,
+            type: actionTypes.DELETE_SECTION,
             value: sectionKey
         };
     },
     submitSection: (keyAndUpdatedText) => {
         return {
-            type: actionTypes.SUBMIT_SECTION,
+            type: actionTypes.UPDATE_SECTION,
             value: keyAndUpdatedText
         };
     },
-    editSection: (sectionKey) => {
+    toggleEditSection: (sectionKey) => {
         return {
-            type: actionTypes.EDIT_SECTION,
+            type: actionTypes.TOGGLE_EDIT_SECTION,
             value: sectionKey
         };
     },

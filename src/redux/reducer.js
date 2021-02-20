@@ -17,7 +17,7 @@ const reducer = (state = initialState, action) => {
                     todos: [
                         ...state.todos,
                         {
-                            key: Math.random().toString(),
+                            key: new Date().valueOf(),
                             done: false,
                             creation: new Date().valueOf(),
                             title: '',
@@ -31,11 +31,11 @@ const reducer = (state = initialState, action) => {
         case actionTypes.ADD_SECTION:
             return (function () {
                 let newSection = {
-                    key: Math.random().toString(),
+                    key: new Date().valueOf(),
                     title: "",
                     checkable: false,
                     isEditing: true,
-                    creation: new Date().valueOf(),
+                    lastUpdate: new Date().valueOf(),
                     day: value.toISOString().slice(0, 10),
                 };
                 return {
@@ -46,7 +46,7 @@ const reducer = (state = initialState, action) => {
                     ],
                 };
             })();
-        case actionTypes.SUBMIT_SECTION:
+        case actionTypes.UPDATE_SECTION:
             return (function () {
                 let sections = [...state.sections];
                 let currentSectionIndex = sections.findIndex(section => section.key === value.sectionKey);
@@ -54,6 +54,7 @@ const reducer = (state = initialState, action) => {
                     ...sections[currentSectionIndex],
                     isEditing: false,
                     title: value.textInput,
+                    lastUpdate: new Date().valueOf(),
                 };
                 let todos = [...state.todos];
                 todos.forEach(todo => {
@@ -67,7 +68,7 @@ const reducer = (state = initialState, action) => {
                     todos,
                 };
             })();
-        case actionTypes.EDIT_SECTION:
+        case actionTypes.TOGGLE_EDIT_SECTION:
             return (function () {
                 let sectionKey = value;
                 let sections = [...state.sections];
@@ -75,13 +76,14 @@ const reducer = (state = initialState, action) => {
                 sections[currentSectionIndex] = {
                     ...sections[currentSectionIndex],
                     isEditing: true,
+                    lastUpdate: new Date().valueOf(),
                 };
                 return {
                     ...state,
                     sections,
                 };
             })();
-        case actionTypes.REMOVE_SECTION:
+        case actionTypes.DELETE_SECTION:
             return (function () {
                 let sectionKey = value;
                 let sections = [...state.sections];
