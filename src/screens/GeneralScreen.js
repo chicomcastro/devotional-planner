@@ -1,7 +1,7 @@
 import React from 'react';
 import { StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native';
-import { StyleSheet,  View, SectionList } from 'react-native';
+import { StyleSheet,  View, SectionList, Text } from 'react-native';
 
 import SectionHeader from '../SectionHeader';
 import Todo from '../Todo';
@@ -86,6 +86,7 @@ class GeneralScreen extends React.Component {
                     renderSectionFooter={() => (
                         <View style={styles.sectionFooter}></View>
                     )}
+                    ListEmptyComponent={<Text>Não tem nada aqui ;-;</Text>}
                 />
             </SafeAreaView>
         );

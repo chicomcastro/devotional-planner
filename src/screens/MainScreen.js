@@ -129,6 +129,7 @@ class HomeScreen extends React.Component {
                     renderSectionFooter={() => (
                         <View style={styles.sectionFooter}></View>
                     )}
+                    ListEmptyComponent={<Text>Não tem nada aqui ;-;</Text>}
                 />
                 {!this.state.showingKeyboard && <FloatingButton onPress={this.insertSection}></FloatingButton>}
             </SafeAreaView>
