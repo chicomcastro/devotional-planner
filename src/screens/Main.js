@@ -93,7 +93,7 @@ class HomeScreen extends React.Component {
         this.props.submitSection({ sectionKey, textInput });
     };
 
-    requestEditSection = this.props.editSection;
+    requestEditSection = this.props.toggleEditSection;
 
     addItemToSection = (sectionKey) => this.props.addItemToSection(this.state.date, sectionKey);
 
@@ -107,8 +107,8 @@ class HomeScreen extends React.Component {
     // ---
     
     getSections = () => {
-        let todos = [...this.props.todos];
-        let sectionsProps = [...this.props.sections];
+        let todos = [...this.props.todos].filter(todo => todo.day === this.state.date.toISOString().slice(0, 10));
+        let sectionsProps = [...this.props.sections].filter(section => section.day === this.state.date.toISOString().slice(0, 10));
         let sectionsList = sectionsProps.map(section => { return { ...section, data: [] } });
         let sectionsMap = {};
         sectionsList.forEach(section => sectionsMap[section.key] = section);
@@ -167,7 +167,6 @@ class HomeScreen extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    console.log(state);
     return { todos: state.todos, sections: state.sections };
 };
 
@@ -176,7 +175,7 @@ const mapDispatchToProps = (dispatch) => {
         addItemToSection: bindActionCreators(actions.addItem, dispatch),
         addSection: bindActionCreators(actions.addSection, dispatch),
         submitSection: bindActionCreators(actions.submitSection, dispatch),
-        editSection: bindActionCreators(actions.editSection, dispatch),
+        toggleEditSection: bindActionCreators(actions.toggleEditSection, dispatch),
         removeSection: bindActionCreators(actions.removeSection, dispatch),
     };
 };
