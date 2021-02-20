@@ -117,8 +117,7 @@ const reducer = (state = initialState, action) => {
             return (function () {
                 let sectionKey = value;
                 let sections = [...state.sections];
-                let currentSection = sections.find(section => section.key === sectionKey);
-                let filteredTodos = [...state.todos].filter(todo => todo.section !== currentSection.title);
+                let filteredTodos = [...state.todos].filter(todo => todo.section !== sectionKey);
                 let filteredSections = sections.filter(section => section.key !== sectionKey);
                 return {
                     ...state,
