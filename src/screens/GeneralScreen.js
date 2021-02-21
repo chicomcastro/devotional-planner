@@ -10,6 +10,7 @@ import colors from '../utils/colors';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import actions from '../redux/actions';
+import EmptyList from '../EmptyList';
 
 class GeneralScreen extends React.Component {
     constructor(props) {
@@ -106,7 +107,7 @@ class GeneralScreen extends React.Component {
                     renderSectionFooter={() => (
                         <View style={styles.sectionFooter}></View>
                     )}
-                    ListEmptyComponent={<Text>Não tem nada aqui ;-;</Text>}
+                    ListEmptyComponent={<EmptyList></EmptyList>}
                 />
             </SafeAreaView>
         );

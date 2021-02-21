@@ -12,6 +12,7 @@ import { SafeAreaView } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import actions from '../redux/actions.js';
+import EmptyList from '../EmptyList.js';
 
 class HomeScreen extends React.Component {
     constructor(props) {
@@ -133,7 +134,7 @@ class HomeScreen extends React.Component {
                     renderSectionFooter={() => (
                         <View style={styles.sectionFooter}></View>
                     )}
-                    ListEmptyComponent={<Text>Não tem nada aqui ;-;</Text>}
+                    ListEmptyComponent={<EmptyList></EmptyList>}
                 />
                 {!this.state.showingKeyboard && <FloatingButton onPress={this.insertSection}></FloatingButton>}
             </SafeAreaView>
