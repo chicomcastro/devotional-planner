@@ -109,7 +109,7 @@ class HomeScreen extends React.Component {
                     sections={this.getSections()}
                     keyExtractor={(item, index) => item.key + index}
                     renderItem={({ item, index, section }) => (
-                        <Todo
+                        !section.collapsed && <Todo
                             text={item.title}
                             done={item.done}
                             showCheckbox={section.checkable}
@@ -118,12 +118,16 @@ class HomeScreen extends React.Component {
                             onDeleteTask={() => this.deleteTodo(item.key, section)}
                         />
                     )}
-                    renderSectionHeader={({ section: { key, title } }) => (
+                    renderSectionHeader={({ section: { key, title, collapsed } }) => (
                         <SectionHeader
                             title={title}
                             onSubmit={(textInput) => this.updateSection(key, textInput)}
                             onPressAdd={() => this.insertItemToSection(key)}
                             onPressRemove={() => this.deleteSection(key)}
+                            collapsed={collapsed}
+                            onCollapse={() => {
+                                this.props.updateSection(key, { collapsed: !collapsed });
+                            }}
                         ></SectionHeader>
                     )}
                     renderSectionFooter={() => (

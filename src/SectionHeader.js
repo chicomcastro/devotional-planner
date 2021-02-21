@@ -3,12 +3,25 @@ import { Text, View, StyleSheet, TextInput, TouchableOpacity } from 'react-nativ
 import { Icon } from 'react-native-elements';
 import colors from './utils/colors';
 
-export default ({ title, onSubmit, onPressAdd, onPressRemove }) => {
+export default ({ title, onSubmit, onPressAdd, onPressRemove, collapsed, onCollapse }) => {
     const [textInput, setTextInput] = useState(title);
     const [isEditing, setIsEditing] = useState(!textInput);
 
     return (
         <View style={styles.sectionHeader}>
+            <View>
+                <TouchableOpacity
+                    style={styles.collapseIconWrapper}
+                    onPress={() => {
+                        onCollapse && onCollapse();
+                    }}
+                >
+                    <Icon
+                        name={collapsed ? "keyboard-arrow-right" : "keyboard-arrow-down"}
+                        iconStyle={styles.collapseIcon}
+                    ></Icon>
+                </TouchableOpacity>
+            </View>
             <View style={styles.wrapper}>
                 {isEditing &&
                     <View style={styles.textBox}>
@@ -93,7 +106,7 @@ const styles = StyleSheet.create({
     },
     sectionHeaderTitle: {
         marginVertical: 15,
-        paddingHorizontal: 15,
+        paddingHorizontal: 8,
         fontSize: 18,
     },
     sectionHeaderButton: {
@@ -113,7 +126,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 4,
         marginVertical: 5,
-        marginHorizontal: 7,
+        marginRight: 7,
         alignItems: 'center',
     },
     textBoxInput: {
@@ -131,5 +144,12 @@ const styles = StyleSheet.create({
     },
     textBoxWrapper: {
         flex: 1,
+    },
+    collapseIconWrapper: {
+        paddingLeft: 10,
+        paddingRight: 3,
+    },
+    collapseIcon: {
+        color: 'black',
     },
 });
