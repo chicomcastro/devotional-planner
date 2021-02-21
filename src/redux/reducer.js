@@ -85,20 +85,12 @@ const reducer = (state = initialState, action) => {
                 let currentSectionIndex = sections.findIndex(section => section.key === value.sectionKey);
                 sections[currentSectionIndex] = {
                     ...sections[currentSectionIndex],
-                    isEditing: false,
-                    title: value.textInput,
+                    ...value.updatedValues,
                     lastUpdate: new Date().valueOf(),
                 };
-                let todos = [...state.todos];
-                todos.forEach(todo => {
-                    if (todo.section === value.sectionKey) {
-                        todo.section = value.sectionKey;
-                    }
-                });
                 return {
                     ...state,
                     sections,
-                    todos,
                 };
             })();
         case actionTypes.TOGGLE_EDIT_SECTION:
@@ -108,7 +100,6 @@ const reducer = (state = initialState, action) => {
                 let currentSectionIndex = sections.findIndex(section => section.key === sectionKey);
                 sections[currentSectionIndex] = {
                     ...sections[currentSectionIndex],
-                    isEditing: true,
                     lastUpdate: new Date().valueOf(),
                 };
                 return {

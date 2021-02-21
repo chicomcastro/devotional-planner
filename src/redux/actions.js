@@ -37,10 +37,10 @@ export default {
             value: sectionKey
         };
     },
-    submitSection: (keyAndUpdatedText) => {
+    updateSection: (sectionKey, updatedValues) => {
         return {
             type: actionTypes.UPDATE_SECTION,
-            value: keyAndUpdatedText
+            value: { sectionKey, updatedValues }
         };
     },
     toggleEditSection: (sectionKey) => {

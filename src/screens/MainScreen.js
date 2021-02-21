@@ -62,11 +62,11 @@ class HomeScreen extends React.Component {
     // Sections
     // ---
 
-    submitSection = (sectionKey, textInput) => {
+    updateSection = (sectionKey, textInput) => {
         if (!textInput && !this.props.todos.some(todos => todos.section === sectionKey)) {
             this.props.deleteSection(sectionKey);
         }
-        this.props.submitSection({ sectionKey, textInput });
+        this.props.updateSection(sectionKey, { title: textInput });
     };
 
     insertItemToSection = (sectionKey) => this.props.insertItemToSection(this.state.date, sectionKey);
@@ -121,7 +121,7 @@ class HomeScreen extends React.Component {
                     renderSectionHeader={({ section: { key, title } }) => (
                         <SectionHeader
                             title={title}
-                            onSubmit={(textInput) => this.submitSection(key, textInput)}
+                            onSubmit={(textInput) => this.updateSection(key, textInput)}
                             onPressAdd={() => this.insertItemToSection(key)}
                             onPressRemove={() => this.deleteSection(key)}
                         ></SectionHeader>
@@ -145,7 +145,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         // SECTIONs
         insertSection: bindActionCreators(actions.insertSection, dispatch),
-        submitSection: bindActionCreators(actions.submitSection, dispatch),
+        updateSection: bindActionCreators(actions.updateSection, dispatch),
         toggleEditSection: bindActionCreators(actions.toggleEditSection, dispatch),
         deleteSection: bindActionCreators(actions.deleteSection, dispatch),
         // TODOs

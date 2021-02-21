@@ -27,10 +27,8 @@ class GeneralScreen extends React.Component {
         if (!textInput) {
             this.props.deleteTodo(key);
         }
-        this.props.updateTodo(key, { isEditing: false, title: textInput });
+        this.props.updateTodo(key, { title: textInput });
     };
-
-    requestEditTodo = (key) => this.props.updateTodo(key, { isEditing: true });
 
     toggleCheck = (key) => {
         let todo = this.props.todos.find(todo => todo.key === key);
@@ -78,7 +76,7 @@ class GeneralScreen extends React.Component {
                     sections={this.getSections()}
                     keyExtractor={(item, index) => item.key + index}
                     renderItem={this.renderItem}
-                    renderSectionHeader={({ section: { key, title, isEditing } }) => (
+                    renderSectionHeader={({ section: { key, title } }) => (
                         <SectionHeader
                             title={title}
                         ></SectionHeader>
@@ -101,7 +99,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         // SECTIONs
         insertSection: bindActionCreators(actions.insertSection, dispatch),
-        submitSection: bindActionCreators(actions.submitSection, dispatch),
+        updateSection: bindActionCreators(actions.updateSection, dispatch),
         toggleEditSection: bindActionCreators(actions.toggleEditSection, dispatch),
         deleteSection: bindActionCreators(actions.deleteSection, dispatch),
         // TODOs
