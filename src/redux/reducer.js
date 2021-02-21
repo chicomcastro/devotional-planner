@@ -68,6 +68,7 @@ const reducer = (state = initialState, action) => {
                     key: new Date().valueOf(),
                     title: "",
                     checkable: true,
+                    collapsed: false,
                     lastUpdate: new Date().valueOf(),
                     day: value.toISOString().slice(0, 10),
                 };
