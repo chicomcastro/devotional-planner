@@ -3,10 +3,13 @@ import actionTypes from "./actionTypes";
 const initialState = {
     todos: [],
     sections: [],
+    logs: [],
 }
 
 const reducer = (state = initialState, action) => {
     let { type, value } = action;
+
+    state.logs.push(action);
 
     switch (type) {
 
