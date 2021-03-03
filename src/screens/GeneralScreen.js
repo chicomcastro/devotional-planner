@@ -157,7 +157,6 @@ const mapDispatchToProps = (dispatch) => {
         // SECTIONs
         insertSection: bindActionCreators(actions.insertSection, dispatch),
         updateSection: bindActionCreators(actions.updateSection, dispatch),
-        toggleEditSection: bindActionCreators(actions.toggleEditSection, dispatch),
         deleteSection: bindActionCreators(actions.deleteSection, dispatch),
         // TODOs
         insertItemToSection: bindActionCreators(actions.insertItem, dispatch),

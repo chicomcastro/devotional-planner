@@ -43,10 +43,10 @@ export default {
             value: { sectionKey, updatedValues }
         };
     },
-    toggleEditSection: (sectionKey) => {
+    updateUser: (updatedValues) => {
         return {
-            type: actionTypes.TOGGLE_EDIT_SECTION,
-            value: sectionKey
+            type: actionTypes.UPDATE_USER,
+            value: updatedValues,
         };
     },
 };

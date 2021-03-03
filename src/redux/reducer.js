@@ -4,6 +4,16 @@ const initialState = {
     todos: [],
     sections: [],
     logs: [],
+    user: {
+        username: '',
+        firstName: '',
+        lastName: '',
+        gender: '',
+        mail: '',
+    },
+    settings: {
+        fixedSections: ["Leitura bíblica", "Oração", "Jejum", ],
+    },
 }
 
 const reducer = (state = initialState, action) => {
@@ -94,20 +104,6 @@ const reducer = (state = initialState, action) => {
                     sections,
                 };
             })();
-        case actionTypes.TOGGLE_EDIT_SECTION:
-            return (function () {
-                let sectionKey = value;
-                let sections = [...state.sections];
-                let currentSectionIndex = sections.findIndex(section => section.key === sectionKey);
-                sections[currentSectionIndex] = {
-                    ...sections[currentSectionIndex],
-                    lastUpdate: new Date().valueOf(),
-                };
-                return {
-                    ...state,
-                    sections,
-                };
-            })();
         case actionTypes.DELETE_SECTION:
             return (function () {
                 let sectionKey = value;
@@ -118,6 +114,21 @@ const reducer = (state = initialState, action) => {
                     ...state,
                     todos: filteredTodos,
                     sections: filteredSections,
+                };
+            })();
+        
+        // ---
+        // Settings
+        // ---
+        case actionTypes.UPDATE_USER:
+            return (function () {
+                let newValues = value;
+                return {
+                    ...state,
+                    user: {
+                        ...state.user,
+                        ...newValues,
+                    },
                 };
             })();
         default:
