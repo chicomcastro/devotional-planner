@@ -159,7 +159,6 @@ class HomeScreen extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    console.log("hey");
     return { todos: state.todos, sections: state.sections };
 };
 

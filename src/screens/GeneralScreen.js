@@ -80,7 +80,6 @@ class GeneralScreen extends React.Component {
     }
 
     getSections = () => {
-        console.log("getsections")
         let todos = [...this.props.todos];
         let sectionsMap = {};
         this.sections = [];
