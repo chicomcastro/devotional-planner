@@ -14,21 +14,29 @@ import { bindActionCreators } from 'redux';
 import actions from '../redux/actions.js';
 import EmptyList from '../EmptyList.js';
 
+import { withNavigation } from 'react-navigation';
+
 class HomeScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             textInput: '',
             showingKeyboard: false,
+            tabFocus: true,
             date: new Date(),
         };
         this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
         this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
+
+        this.unsubscribeTabFocus = this.props.navigation.addListener('focus', this._tabDidFocus);
+        this.unsubscribeTabBlur = this.props.navigation.addListener('blur', this._tabDidBlur);
     };
 
     componentWillUnmount() {
         this.keyboardDidShowListener.remove();
         this.keyboardDidHideListener.remove();
+        this.unsubscribeTabFocus();
+        this.unsubscribeTabBlur();
     }
 
     _keyboardDidShow = () => {
@@ -37,6 +45,14 @@ class HomeScreen extends React.Component {
 
     _keyboardDidHide = () => {
         this.setState({ showingKeyboard: false });
+    }
+
+    _tabDidFocus = () => {
+        this.setState({ tabFocus: true });
+    }
+
+    _tabDidBlur = () => {
+        this.setState({ tabFocus: false });
     }
 
 
@@ -110,7 +126,7 @@ class HomeScreen extends React.Component {
                     sections={this.getSections()}
                     keyExtractor={(item, index) => item.key + index}
                     renderItem={({ item, index, section }) => (
-                        !section.collapsed && <Todo
+                        !section.collapsed && this.state.tabFocus && <Todo
                             text={item.title}
                             done={item.done}
                             showCheckbox={section.checkable}
@@ -143,6 +159,7 @@ class HomeScreen extends React.Component {
 }
 
 const mapStateToProps = (state) => {
+    console.log("hey");
     return { todos: state.todos, sections: state.sections };
 };
 
@@ -160,7 +177,7 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(HomeScreen));
 
 const styles = StyleSheet.create({
     container: {

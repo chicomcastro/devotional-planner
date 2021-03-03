@@ -47,6 +47,7 @@ const TabNavigator = () =>
             activeTintColor: colors.essence2,
             inactiveTintColor: 'gray',
         }}
+        lazy={true}
     >
         <Tab.Screen name={routeNames.DAILY} component={HomeScreen} />
         <Tab.Screen name={routeNames.GENERAL} component={GeneralScreen} />

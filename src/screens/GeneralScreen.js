@@ -1,7 +1,7 @@
 import React from 'react';
 import { StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native';
-import { StyleSheet, View, SectionList, Text } from 'react-native';
+import { StyleSheet, View, SectionList, Text, ActivityIndicator } from 'react-native';
 
 import SectionHeader from '../SectionHeader';
 import Todo from '../Todo';
@@ -12,14 +12,32 @@ import { bindActionCreators } from 'redux';
 import actions from '../redux/actions';
 import EmptyList from '../EmptyList';
 
+import { withNavigation } from 'react-navigation';
+
 class GeneralScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             textInput: '',
-            sections: [],
+            tabFocus: true,
         };
+        this.sections = [];
+        this.unsubscribeTabFocus = this.props.navigation.addListener('focus', this._tabDidFocus);
+        this.unsubscribeTabBlur = this.props.navigation.addListener('blur', this._tabDidBlur);
     };
+
+    componentWillUnmount() {
+        this.unsubscribeTabFocus();
+        this.unsubscribeTabBlur();
+    }
+
+    _tabDidFocus = () => {
+        this.setState({ tabFocus: true });
+    }
+
+    _tabDidBlur = () => {
+        this.setState({ tabFocus: false });
+    }
 
     // ---
     // Todos (items)
@@ -40,14 +58,14 @@ class GeneralScreen extends React.Component {
     deleteTodo = this.props.deleteTodo;
 
     renderItem = ({ item, index, section }) => (
-        !section.collapsed && <Todo
+        !section.collapsed && this.state.tabFocus && <Todo
             text={item.title}
             done={item.done}
             showCheckbox={section.checkable}
             onSubmit={(textInput) => this.submitTodo(item.key, textInput)}
             onToggleCheck={() => this.toggleCheck(item.key, section)}
             onDeleteTask={() => this.deleteTodo(item.key, section)}
-        />
+        /> || null
     );
 
     createSection = (day) => {
@@ -57,16 +75,18 @@ class GeneralScreen extends React.Component {
             checkable: true,
             data: [],
         };
-        this.state.sections.push(section);
+        this.sections.push(section);
         return section;
     }
 
     getSections = () => {
+        console.log("getsections")
         let todos = [...this.props.todos];
         let sectionsMap = {};
+        this.sections = [];
         todos.forEach(todo => {
             if (!sectionsMap[todo.day]) {
-                let section = this.state.sections.find(section => section.title === new Date(todo.day).toGMTString().slice(0, 11));
+                let section = this.sections.find(section => section.title === new Date(todo.day).toGMTString().slice(0, 11));
                 if (!section) {
                     section = this.createSection(todo.day);
                 }
@@ -85,30 +105,41 @@ class GeneralScreen extends React.Component {
                 style={styles.container}
             >
                 <StatusBar backgroundColor={colors.white} barStyle='dark-content'></StatusBar>
-                <SectionList
-                    sections={this.getSections()}
-                    keyExtractor={(item, index) => item.key + index}
-                    renderItem={this.renderItem}
-                    renderSectionHeader={({ section: { key, title, collapsed } }) => (
-                        <SectionHeader
-                            title={title}
-                            collapsed={collapsed}
-                            onCollapse={() => {
-                                let sectionIndex = this.state.sections.findIndex(section => section.key === key);
-                                let sections = [...this.state.sections];
-                                sections[sectionIndex] = {
-                                    ...sections[sectionIndex],
-                                    collapsed: !collapsed,
-                                }
-                                this.setState({ sections })
-                            }}
-                        ></SectionHeader>
-                    )}
-                    renderSectionFooter={() => (
-                        <View style={styles.sectionFooter}></View>
-                    )}
-                    ListEmptyComponent={<EmptyList></EmptyList>}
-                />
+                { this.state.tabFocus ?
+                    <SectionList
+                        sections={this.getSections()}
+                        keyExtractor={(item, index) => item.key + index}
+                        renderItem={this.renderItem}
+                        renderSectionHeader={({ section: { key, title, collapsed } }) => (
+                            <SectionHeader
+                                title={title}
+                                collapsed={collapsed}
+                                onCollapse={() => {
+                                    let sectionIndex = this.sections.findIndex(section => section.key === key);
+                                    let sections = [...this.sections];
+                                    sections[sectionIndex] = {
+                                        ...sections[sectionIndex],
+                                        collapsed: !collapsed,
+                                    }
+                                    this.setState({ sections })
+                                }}
+                            ></SectionHeader>
+                        )}
+                        renderSectionFooter={() => (
+                            <View style={styles.sectionFooter}></View>
+                        )}
+                        ListEmptyComponent={<EmptyList></EmptyList>}
+                    /> : 
+                    <View style={{
+                        flex: 1,
+                        justifyContent: "center",
+                        flexDirection: "row",
+                        justifyContent: "space-around",
+                        padding: 10
+                    }}>
+                        <ActivityIndicator size="large" color={colors.essence1} />
+                    </View>
+                }
             </SafeAreaView>
         );
     }
@@ -132,7 +163,7 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(GeneralScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(GeneralScreen));
 
 const styles = StyleSheet.create({
     container: {
