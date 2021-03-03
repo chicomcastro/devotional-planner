@@ -1,6 +1,5 @@
 import React from 'react';
-import { Keyboard, StyleSheet, TextInput, View, FlatList, KeyboardAvoidingView, TouchableOpacity, SectionList, Text } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { Keyboard, StyleSheet, ActivityIndicator, View, SectionList } from 'react-native';
 import Todo from '../Todo.js';
 import { DatePicker } from '../DatePicker.js';
 import colors from '../utils/colors.js';
@@ -121,37 +120,48 @@ class HomeScreen extends React.Component {
                     date={this.state.date}
                     setDate={(date) => this.setState({ date })}
                 ></DatePicker>
-                <SectionList
-                    style={styles.sectionList}
-                    sections={this.getSections()}
-                    keyExtractor={(item, index) => item.key + index}
-                    renderItem={({ item, index, section }) => (
-                        !section.collapsed && this.state.tabFocus && <Todo
-                            text={item.title}
-                            done={item.done}
-                            showCheckbox={section.checkable}
-                            onSubmit={(textInput) => this.submitTodo(item.key, textInput)}
-                            onToggleCheck={() => this.toggleCheck(item.key, section)}
-                            onDeleteTask={() => this.deleteTodo(item.key, section)}
-                        />
-                    )}
-                    renderSectionHeader={({ section: { key, title, collapsed } }) => (
-                        <SectionHeader
-                            title={title}
-                            onSubmit={(textInput) => this.updateSection(key, textInput)}
-                            onPressAdd={() => this.insertItemToSection(key)}
-                            onPressRemove={() => this.deleteSection(key)}
-                            collapsed={collapsed}
-                            onCollapse={() => {
-                                this.props.updateSection(key, { collapsed: !collapsed });
-                            }}
-                        ></SectionHeader>
-                    )}
-                    renderSectionFooter={() => (
-                        <View style={styles.sectionFooter}></View>
-                    )}
-                    ListEmptyComponent={<EmptyList></EmptyList>}
-                />
+                { this.state.tabFocus ?
+                    <SectionList
+                        style={styles.sectionList}
+                        sections={this.getSections()}
+                        keyExtractor={(item, index) => item.key + index}
+                        renderItem={({ item, index, section }) => (
+                            !section.collapsed && this.state.tabFocus && <Todo
+                                text={item.title}
+                                done={item.done}
+                                showCheckbox={section.checkable}
+                                onSubmit={(textInput) => this.submitTodo(item.key, textInput)}
+                                onToggleCheck={() => this.toggleCheck(item.key, section)}
+                                onDeleteTask={() => this.deleteTodo(item.key, section)}
+                            />
+                        )}
+                        renderSectionHeader={({ section: { key, title, collapsed } }) => (
+                            <SectionHeader
+                                title={title}
+                                onSubmit={(textInput) => this.updateSection(key, textInput)}
+                                onPressAdd={() => this.insertItemToSection(key)}
+                                onPressRemove={() => this.deleteSection(key)}
+                                collapsed={collapsed}
+                                onCollapse={() => {
+                                    this.props.updateSection(key, { collapsed: !collapsed });
+                                }}
+                            ></SectionHeader>
+                        )}
+                        renderSectionFooter={() => (
+                            <View style={styles.sectionFooter}></View>
+                        )}
+                        ListEmptyComponent={<EmptyList></EmptyList>}
+                    /> : 
+                    <View style={{
+                        flex: 1,
+                        justifyContent: "center",
+                        flexDirection: "row",
+                        justifyContent: "space-around",
+                        padding: 10
+                    }}>
+                        <ActivityIndicator size="large" color={colors.essence1} />
+                    </View>
+                }
                 {!this.state.showingKeyboard && <FloatingButton onPress={this.insertSection}></FloatingButton>}
             </SafeAreaView>
         );
