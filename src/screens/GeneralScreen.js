@@ -71,12 +71,16 @@ class GeneralScreen extends React.Component {
     createSection = (day) => {
         let section = {
             key: Math.random().toString(),
-            title: new Date(day).toGMTString().slice(0, 11),
+            title: this.formatDate(day),
             checkable: true,
             data: [],
         };
         this.sections.push(section);
         return section;
+    }
+
+    formatDate(date) {
+        return new Date(date).toLocaleString().slice(0, 11);
     }
 
     getSections = () => {
@@ -85,7 +89,7 @@ class GeneralScreen extends React.Component {
         this.sections = [];
         todos.forEach(todo => {
             if (!sectionsMap[todo.day]) {
-                let section = this.sections.find(section => section.title === new Date(todo.day).toGMTString().slice(0, 11));
+                let section = this.sections.find(section => section.title === this.formatDate(todo.day));
                 if (!section) {
                     section = this.createSection(todo.day);
                 }
