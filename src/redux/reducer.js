@@ -12,7 +12,7 @@ const initialState = {
         mail: '',
     },
     settings: {
-        fixedSections: ["Leitura bíblica", "Oração", "Jejum", ],
+        defaultItems: [],
     },
 }
 
@@ -128,6 +128,42 @@ const reducer = (state = initialState, action) => {
                     user: {
                         ...state.user,
                         ...newValues,
+                    },
+                };
+            })();
+        case actionTypes.ADD_DEFAULT_SECTION:
+            return (function () {
+                let newDefaultSection = value;
+                let settings = {
+                    defaultItems: [],
+                    ...state.settings,
+                };
+                let defaultItems = [...settings.defaultItems];
+                if (defaultItems.indexOf(newDefaultSection) < 0) {
+                    defaultItems.push(newDefaultSection);
+                }
+                return {
+                    ...state,
+                    settings: {
+                        ...state.settings,
+                        defaultItems,
+                    },
+                };
+            })();
+        case actionTypes.DELETE_DEFAULT_SECTION:
+            return (function () {
+                let defaultSectionTitle = value;
+                let settings = {
+                    defaultItems: [],
+                    ...state.settings,
+                };
+                let defaultItems = [...settings.defaultItems];
+                defaultItems = defaultItems.filter(item => item !== defaultSectionTitle);
+                return {
+                    ...state,
+                    settings: {
+                        ...state.settings,
+                        defaultItems,
                     },
                 };
             })();

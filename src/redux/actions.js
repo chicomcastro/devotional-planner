@@ -49,4 +49,16 @@ export default {
             value: updatedValues,
         };
     },
+    addDefaultSection: (newDefaultSection) => {
+        return {
+            type: actionTypes.ADD_DEFAULT_SECTION,
+            value: newDefaultSection,
+        };
+    },
+    deleteDefaultSection: (defaultSectionTitle) => {
+        return {
+            type: actionTypes.DELETE_DEFAULT_SECTION,
+            value: defaultSectionTitle,
+        };
+    },
 };
